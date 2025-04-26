@@ -16,14 +16,13 @@ public static class Sprites {
     private static VistaFolderBrowserDialog dirDialog;
 
     public static SpriteRenderer GetOrAddRenderer(this scrPlanet planet) {
-        if(!planet)
-            return null;
+        if(!planet) return null;
         SpriteRenderer renderer = planet.transform.Find("PlanetTweaksRenderer")?.GetComponent<SpriteRenderer>();
         if(!renderer) {
             GameObject obj = new GameObject("PlanetTweaksRenderer");
             obj.AddComponent<RendererController>();
             renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sortingOrder = planet.planetRenderer.sprite.meshRenderer.sortingOrder + 1;
+            renderer.sortingOrder = planet.planetRenderer.GetComponent<SpriteRenderer>().sortingOrder + 1;
             renderer.sortingLayerID = planet.planetRenderer.faceDetails.sortingLayerID;
             renderer.sortingLayerName = planet.planetRenderer.faceDetails.sortingLayerName;
             renderer.transform.SetParent(planet.transform);

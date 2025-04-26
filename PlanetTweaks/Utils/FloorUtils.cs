@@ -61,7 +61,7 @@ public static class FloorUtils {
     }
 
     public static scrFloor GetFloor(float x, float y) {
-        var array = Physics2D.OverlapPointAll(new Vector2(x, y), 1 << LayerMask.NameToLayer("Floor"));
+        Collider2D[] array = Physics2D.OverlapPointAll(new Vector2(x, y), 1 << LayerMask.NameToLayer("Floor"));
         return array.Length == 0 ? null : array[0].gameObject.GetComponent<scrFloor>();
     }
 }

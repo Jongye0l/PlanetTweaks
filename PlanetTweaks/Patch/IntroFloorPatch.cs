@@ -36,7 +36,7 @@ public static class IntroFloorPatch {
             if(!FloorUtils.AddEventFloor(-15, -3, null))
                 FloorUtils.AddFloor(-15, -3);
 
-            var exitFloor = FloorUtils.AddFloor(-13.9f, -5.65f);
+            scrFloor exitFloor = FloorUtils.AddFloor(-13.9f, -5.65f);
             exitFloor.transform.ScaleXY(0.5f, 0.5f);
             exitFloor.isportal = true;
             exitFloor.floorRenderer.sortingOrder = 0;
@@ -108,7 +108,8 @@ public static class IntroFloorPatch {
             }
             for(int i = -18; i < -6; i++)
             for(int j = -3; j < 4; j += 6) {
-                GameObject obj = FloorUtils.GetFloor(j, i).gameObject;
+                GameObject obj = FloorUtils.GetFloor(j, i)?.gameObject;
+                if(!obj) continue;
                 obj.GetComponent<scrFloor>().isLandable = false;
                 obj.SetActive(false);
             }

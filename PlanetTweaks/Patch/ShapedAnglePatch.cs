@@ -9,7 +9,7 @@ public static class ShapedAnglePatch {
         if(!Main.Settings.shapedRotation || !__instance.isChosen)
             return;
         float angle = 360f / Main.Settings.shapedAngle * Mathf.Deg2Rad;
-        int planets = __instance.currfloor.numPlanets;
+        int planets = __instance.currfloor?.numPlanets ?? 3;
         if(planets <= 2) {
             Vector3 substract = (___movingToNext.transform.position - ___tempTransPos) / __instance.cosmeticRadius;
             float realAngle = (Mathf.Asin(substract.x) + Mathf.PI * 2) % (Mathf.PI * 2);

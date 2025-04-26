@@ -535,5 +535,9 @@
     <Target Name="AfterBuild">
     </Target>
     -->
-
+    
+    <Target Name="AfterBuild">
+        <Copy SourceFiles="$(OutputPath)PlanetTweaks.dll" DestinationFolder="D:\SteamLibrary\steamapps\common\A Dance of Fire and Ice\Mods\PlanetTweaks"/>
+        <Copy SourceFiles="bin/Release/PlanetTweaks.dll" DestinationFolder="D:\ModRelease/PlanetTweaks"/>
+    </Target>
 </Project>
