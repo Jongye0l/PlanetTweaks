@@ -2,6 +2,7 @@
 using PlanetTweaks.Components;
 using PlanetTweaks.Utils;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -22,9 +23,9 @@ public static class Sprites {
             GameObject obj = new GameObject("PlanetTweaksRenderer");
             obj.AddComponent<RendererController>();
             renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sortingOrder = planet.sprite.Get<SpriteRenderer>("meshRenderer").sortingOrder + 1;
-            renderer.sortingLayerID = planet.faceDetails.sortingLayerID;
-            renderer.sortingLayerName = planet.faceDetails.sortingLayerName;
+            renderer.sortingOrder = planet.planetRenderer.sprite.Get<SpriteRenderer>("meshRenderer").sortingOrder + 1;
+            renderer.sortingLayerID = planet.planetRenderer.faceDetails.sortingLayerID;
+            renderer.sortingLayerName = planet.planetRenderer.faceDetails.sortingLayerName;
             renderer.transform.SetParent(planet.transform);
             renderer.transform.position = planet.transform.position;
             Apply(renderer, planet.isRed ? RedSprite : (!planet.isExtra ? BlueSprite : ThirdSprite));
@@ -38,13 +39,12 @@ public static class Sprites {
     private static object redPreview;
 
     public static object RedPreview {
-        get { return redPreview; }
+        get => redPreview;
 
         set {
             redPreview = value;
-            var planet = scrController.instance?.redPlanet;
-            if(planet == null)
-                return;
+            scrPlanet planet = scrController.instance?.planetarySystem?.planetRed;
+            if(!planet) return;
             Apply(planet, value ?? RedSprite);
         }
     }
@@ -52,13 +52,12 @@ public static class Sprites {
     private static object bluePreview;
 
     public static object BluePreview {
-        get { return bluePreview; }
+        get => bluePreview;
 
         set {
             bluePreview = value;
-            var planet = scrController.instance?.bluePlanet;
-            if(planet == null)
-                return;
+            scrPlanet planet = scrController.instance?.planetarySystem?.planetBlue;
+            if(!planet) return;
             Apply(planet, value ?? BlueSprite);
         }
     }
@@ -70,9 +69,8 @@ public static class Sprites {
 
         set {
             thirdPreview = value;
-            var planet = PlanetUtils.GetThirdPlanet();
-            if(planet == null)
-                return;
+            scrPlanet planet = PlanetUtils.GetThirdPlanet();
+            if(!planet) return;
             Apply(planet, value ?? ThirdSprite);
         }
     }
@@ -87,31 +85,26 @@ public static class Sprites {
                 return -1;
             if(sprites.ContainsKey(Main.Settings.redSelected))
                 return sprites.Keys.ToList().IndexOf(Main.Settings.redSelected);
-            else {
-                Main.Settings.redSelected = null;
-                return -1;
-            }
+            Main.Settings.redSelected = null;
+            return -1;
         }
 
         set {
-            var planet = scrController.instance?.redPlanet;
+            var planet = scrController.instance?.planetarySystem?.planetRed;
 
             if(value < 0) {
                 Main.Settings.redSelected = null;
                 RedSprite = null;
                 Apply(planet, null);
                 return;
-            } else {
-                if(value >= sprites.Count)
-                    return;
-                var pair = sprites.ElementAt(value);
-                Main.Settings.redSelected = pair.Key;
-                RedSprite = pair.Value;
-
-                if(planet == null)
-                    return;
-                Apply(planet, RedSprite);
             }
+            if(value >= sprites.Count) return;
+            KeyValuePair<string, object> pair = sprites.ElementAt(value);
+            Main.Settings.redSelected = pair.Key;
+            RedSprite = pair.Value;
+
+            if(!planet) return;
+            Apply(planet, RedSprite);
         }
     }
 
@@ -121,30 +114,25 @@ public static class Sprites {
                 return -1;
             if(sprites.ContainsKey(Main.Settings.blueSelected))
                 return sprites.Keys.ToList().IndexOf(Main.Settings.blueSelected);
-            else {
-                Main.Settings.blueSelected = null;
-                return -1;
-            }
+            Main.Settings.blueSelected = null;
+            return -1;
         }
 
         set {
-            var planet = scrController.instance?.bluePlanet;
+            scrPlanet planet = scrController.instance?.planetarySystem?.planetBlue;
             if(value < 0) {
                 Main.Settings.blueSelected = null;
                 BlueSprite = null;
                 Apply(planet, null);
                 return;
-            } else {
-                if(value >= sprites.Count)
-                    return;
-                var pair = sprites.ElementAt(value);
-                Main.Settings.blueSelected = pair.Key;
-                BlueSprite = pair.Value;
-
-                if(planet == null)
-                    return;
-                Apply(planet, BlueSprite);
             }
+            if(value >= sprites.Count) return;
+            KeyValuePair<string, object> pair = sprites.ElementAt(value);
+            Main.Settings.blueSelected = pair.Key;
+            BlueSprite = pair.Value;
+
+            if(!planet) return;
+            Apply(planet, BlueSprite);
         }
     }
 
@@ -154,10 +142,8 @@ public static class Sprites {
                 return -1;
             if(sprites.ContainsKey(Main.Settings.thirdSelected))
                 return sprites.Keys.ToList().IndexOf(Main.Settings.thirdSelected);
-            else {
-                Main.Settings.thirdSelected = null;
-                return -1;
-            }
+            Main.Settings.thirdSelected = null;
+            return -1;
         }
 
         set {
@@ -167,17 +153,14 @@ public static class Sprites {
                 ThirdSprite = null;
                 Apply(planet, null);
                 return;
-            } else {
-                if(value >= sprites.Count)
-                    return;
-                var pair = sprites.ElementAt(value);
-                Main.Settings.thirdSelected = pair.Key;
-                ThirdSprite = pair.Value;
-
-                if(planet == null)
-                    return;
-                Apply(planet, ThirdSprite);
             }
+            if(value >= sprites.Count) return;
+            KeyValuePair<string, object> pair = sprites.ElementAt(value);
+            Main.Settings.thirdSelected = pair.Key;
+            ThirdSprite = pair.Value;
+
+            if(!planet) return;
+            Apply(planet, ThirdSprite);
         }
     }
 

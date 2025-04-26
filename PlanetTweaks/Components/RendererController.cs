@@ -21,7 +21,7 @@ public class RendererController : MonoBehaviour {
                 Destroy(gameObject);
                 return;
             }
-            renderer.enabled = planet.sprite.visible;
+            renderer.enabled = planet.planetRenderer.sprite.visible;
         }
     }
 }

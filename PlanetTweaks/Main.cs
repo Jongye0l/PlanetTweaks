@@ -45,7 +45,7 @@ public static class Main {
             Harmony.UnpatchAll(modEntry.Info.Id);
         }
         if(scrController.instance)
-            foreach(scrPlanet planet in scrController.instance?.allPlanets) {
+            foreach(scrPlanet planet in scrController.instance.planetarySystem.allPlanets) {
                 SpriteRenderer renderer = planet.GetOrAddRenderer();
                 if(!value)
                     UnityEngine.Object.Destroy(renderer.gameObject);
@@ -120,28 +120,22 @@ public static class Main {
         bool blueColorChange = Settings.blueColor != blueColor;
         if(redChange) {
             Settings.redSize = redSize;
-            scrController.instance.redPlanet.GetOrAddRenderer().transform.localScale = new Vector2(redSize, redSize);
+            scrController.instance.planetarySystem.planetRed.GetOrAddRenderer().transform.localScale = new Vector2(redSize, redSize);
         }
         if(blueChange) {
             Settings.blueSize = blueSize;
-            scrController.instance.bluePlanet.GetOrAddRenderer().transform.localScale = new Vector2(blueSize, blueSize);
+            scrController.instance.planetarySystem.planetBlue.GetOrAddRenderer().transform.localScale = new Vector2(blueSize, blueSize);
         }
         if(redColorChange) {
             Settings.redColor = redColor;
-            if(redColor)
-                scrController.instance.redPlanet.GetOrAddRenderer().color = ColorUtils.GetRealColor(true);
-            else
-                scrController.instance.redPlanet.GetOrAddRenderer().color = Color.white;
+            scrController.instance.planetarySystem.planetRed.GetOrAddRenderer().color = redColor ? ColorUtils.GetRealColor(true) : Color.white;
         }
         if(blueColorChange) {
             Settings.blueColor = blueColor;
-            if(blueColor)
-                scrController.instance.bluePlanet.GetOrAddRenderer().color = ColorUtils.GetRealColor(false);
-            else
-                scrController.instance.bluePlanet.GetOrAddRenderer().color = Color.white;
+            scrController.instance.planetarySystem.planetBlue.GetOrAddRenderer().color = blueColor ? ColorUtils.GetRealColor(false) : Color.white;
         }
 
-        if(ADOBase.hasTaroDLC && ADOBase.ownsTaroDLC) {
+        if(NeoCosmosManager.instance.installed && NeoCosmosManager.instance.own) {
             GUILayout.Space(60);
             GUILayout.Label($"<size=20>{(RDString.language == SystemLanguage.Korean ? "DLC 설정" : "DLC Settings")}</size>", labelStyle);
             GUILayout.Space(10);

@@ -7,7 +7,7 @@ namespace PlanetTweaks.Patch;
 [HarmonyPatch(typeof(scrPlanet), "Awake")]
 public static class PlanetAwakePatch {
     public static void Postfix(scrPlanet __instance) {
-        if(__instance.dummyPlanets || __instance.objectDecoration)
+        if(__instance.dummyPlanets || __instance.planetRenderer.objectDecoration)
             return;
         if(__instance.transform.Find("PlanetTweaksRenderer"))
             return;
@@ -27,9 +27,9 @@ public static class PlanetAwakePatch {
 [HarmonyPatch(typeof(scrPlanet), "LoadPlanetColor")]
 public static class LoadPlanetColorPatch {
     public static void Postfix(scrPlanet __instance) {
-        if(__instance.dummyPlanets || __instance.objectDecoration)
+        if(__instance.dummyPlanets || __instance.planetRenderer.objectDecoration)
             return;
-        if(__instance.sprite.visible)
+        if(__instance.planetRenderer.sprite.visible)
             if(__instance.isRed)
                 Sprites.RedSelected = Sprites.RedSelected;
             else if(!__instance.isExtra)

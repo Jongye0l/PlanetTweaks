@@ -37,26 +37,26 @@ public static class ColorUtils {
             return;
         if(c == null)
             c = GetThirdColor();
-        if(c == scrPlanet.goldColor) {
-            planet.SwitchToGold();
-        } else if(c == scrPlanet.rainbowColor) {
-            planet.DisableAllSpecialPlanets();
-            planet.EnableCustomColor();
-            planet.SetRainbow(true);
-        } else if(c == scrPlanet.overseerColor) {
-            planet.SwitchToOverseer();
+        if(c == PlanetRenderer.goldColor) {
+            planet.planetRenderer.SwitchToGold();
+        } else if(c == PlanetRenderer.rainbowColor) {
+            planet.planetRenderer.DisableAllSpecialPlanets();
+            planet.planetRenderer.EnableCustomColor();
+            planet.planetRenderer.SetRainbow(true);
+        } else if(c == PlanetRenderer.overseerColor) {
+            planet.planetRenderer.SwitchToOverseer();
         } else {
             Color realColor = scrMisc.PlayerColorToRealColor(c.Value);
             Color tailColor = realColor;
-            if(realColor == scrPlanet.transBlueColor || realColor == scrPlanet.transPinkColor || realColor == scrPlanet.nbYellowColor) {
+            if(realColor == PlanetRenderer.transBlueColor || realColor == PlanetRenderer.transPinkColor || realColor == PlanetRenderer.nbYellowColor) {
                 tailColor = Color.white;
-            } else if(realColor == scrPlanet.nbPurpleColor) {
+            } else if(realColor == PlanetRenderer.nbPurpleColor) {
                 tailColor = Color.black;
             }
-            planet.EnableCustomColor();
-            planet.SetRainbow(false);
-            planet.SetPlanetColor(realColor);
-            planet.SetTailColor(tailColor);
+            planet.planetRenderer.EnableCustomColor();
+            planet.planetRenderer.SetRainbow(false);
+            planet.planetRenderer.SetPlanetColor(realColor);
+            planet.planetRenderer.SetTailColor(tailColor);
         }
     }
 
@@ -71,23 +71,21 @@ public static class ColorUtils {
         if(red == blue) {
             return redOrigin;
         }
-        if((redOrigin == scrPlanet.transPinkColor && blueOrigin == scrPlanet.transBlueColor)
-           || (blueOrigin == scrPlanet.transPinkColor && redOrigin == scrPlanet.transBlueColor)
-           || (redOrigin == scrPlanet.nbYellowColor && blueOrigin == scrPlanet.nbPurpleColor)
-           || (blueOrigin == scrPlanet.nbYellowColor && redOrigin == scrPlanet.nbPurpleColor)) {
+        if(redOrigin == PlanetRenderer.transPinkColor && blueOrigin == PlanetRenderer.transBlueColor
+           || blueOrigin == PlanetRenderer.transPinkColor && redOrigin == PlanetRenderer.transBlueColor
+           || redOrigin == PlanetRenderer.nbYellowColor && blueOrigin == PlanetRenderer.nbPurpleColor
+           || blueOrigin == PlanetRenderer.nbYellowColor && redOrigin == PlanetRenderer.nbPurpleColor) {
             return Color.white;
         }
         Color.RGBToHSV(red, out float redH, out float redS, out float redV);
         Color.RGBToHSV(blue, out float blueH, out float blueS, out float blueV);
-        float n1 = (1 - Mathf.Abs(blueH - redH) > Mathf.Abs(blueH - redH)) ? Mathf.Max(redH, blueH) : Mathf.Min(redH, blueH);
-        float n2 = (1 - Mathf.Abs(blueH - redH) > Mathf.Abs(blueH - redH)) ? Mathf.Min(redH, blueH) : Mathf.Max(redH, blueH);
-        float n3 = (n1 == redH) ? redS : blueS;
-        float n4 = (n1 == redH) ? redV : blueV;
-        float n5 = (n1 == redH) ? blueS : redS;
-        float n6 = (n1 == redH) ? blueV : redV;
-        if(n2 < n1) {
-            n2 += 1;
-        }
+        float n1 = 1 - Mathf.Abs(blueH - redH) > Mathf.Abs(blueH - redH) ? Mathf.Max(redH, blueH) : Mathf.Min(redH, blueH);
+        float n2 = 1 - Mathf.Abs(blueH - redH) > Mathf.Abs(blueH - redH) ? Mathf.Min(redH, blueH) : Mathf.Max(redH, blueH);
+        float n3 = n1 == redH ? redS : blueS;
+        float n4 = n1 == redH ? redV : blueV;
+        float n5 = n1 == redH ? blueS : redS;
+        float n6 = n1 == redH ? blueV : redV;
+        if(n2 < n1) n2 += 1;
         float h = (n1 + (n2 - n1) / 2) % 1;
         float s = n3 + (n5 - n3) / 2;
         float v = n4 + (n6 - n4) / 2;

@@ -31,8 +31,8 @@ public static class SwitchChosenPatch {
             return;
         if(__instance == __result)
             return;
-        float x = scrController.instance.chosenplanet.other.transform.position.x;
-        float y = scrController.instance.chosenplanet.other.transform.position.y;
+        float x = scrController.instance.planetarySystem.chosenPlanet.other.transform.position.x;
+        float y = scrController.instance.planetarySystem.chosenPlanet.other.transform.position.y;
         if(x > -6 && x < 6 && y >= -18 && y <= -6) {
             IntroFloorPatch.leftMovingFloor.transform.DOMoveY(y >= -7 ? -7 : y, 0.5f);
             IntroFloorPatch.rightMovingFloor.transform.DOMoveY(y >= -7 ? -7 : y, 0.5f);

@@ -123,21 +123,21 @@ public class ImageChangePage : MonoBehaviour {
                 instance.changing = true;
                 scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, delegate {
                     instance.changing = false;
-                    List<scrPlanet> planets = scrController.instance.planetList;
-                    scrController.instance.chosenplanet = scrController.instance.chosenplanet.next;
-                    scrController.instance.chosenplanet.transform.LocalMoveXY(-15, -3);
-                    scrController.instance.chosenplanet.transform.position = new Vector3(-15, -3);
+                    List<scrPlanet> planets = scrController.instance.planetarySystem.planetList;
+                    scrController.instance.planetarySystem.chosenPlanet = scrController.instance.planetarySystem.chosenPlanet.next;
+                    scrController.instance.planetarySystem.chosenPlanet.transform.LocalMoveXY(-15, -3);
+                    scrController.instance.planetarySystem.chosenPlanet.transform.position = new Vector3(-15, -3);
                     if(RDString.language == SystemLanguage.Korean) {
-                        if(scrController.instance.chosenplanet.isRed)
+                        if(scrController.instance.planetarySystem.chosenPlanet.isRed)
                             instance.planetText.text = "<color=" + ColorUtils.GetRealColor(true).Hex() + ">불 행성</color> 선택됨";
-                        else if(!scrController.instance.chosenplanet.isExtra)
+                        else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra)
                             instance.planetText.text = "<color=" + ColorUtils.GetRealColor(false).Hex() + ">얼음 행성</color> 선택됨";
                         else
                             instance.planetText.text = "<color=" + ColorUtils.GetRealThirdColor().Hex() + ">세번째 행성</color> 선택됨";
                     } else {
-                        if(scrController.instance.chosenplanet.isRed)
+                        if(scrController.instance.planetarySystem.chosenPlanet.isRed)
                             instance.planetText.text = "<color=" + ColorUtils.GetRealColor(true).Hex() + ">Fire Planet</color> Selected";
-                        else if(!scrController.instance.chosenplanet.isExtra)
+                        else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra)
                             instance.planetText.text = "<color=" + ColorUtils.GetRealColor(false).Hex() + ">Ice Planet</color> Selected";
                         else
                             instance.planetText.text = "<color=" + ColorUtils.GetRealThirdColor().Hex() + ">Third Planet</color> Selected";
@@ -182,12 +182,12 @@ public class ImageChangePage : MonoBehaviour {
                             floor.transform.DOKill(false);
                             floor.transform.DOScale(new Vector3(1, 1), 0.5f).OnComplete(delegate {
                                 int index = instance.page * 23 + copyJ * 6 + copyI;
-                                if((scrController.instance.chosenplanet.isRed ? Sprites.RedSelected : (!scrController.instance.chosenplanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected)) == index)
+                                if((scrController.instance.planetarySystem.chosenPlanet.isRed ? Sprites.RedSelected : !scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == index)
                                     return;
                                 floor.GetPreview().gameObject.SetActive(true);
-                                if(scrController.instance.chosenplanet.isRed)
+                                if(scrController.instance.planetarySystem.chosenPlanet.isRed)
                                     Sprites.RedPreview = Sprites.sprites.ElementAt(index).Value;
-                                else if(!scrController.instance.chosenplanet.isExtra)
+                                else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra)
                                     Sprites.BluePreview = Sprites.sprites.ElementAt(index).Value;
                                 else
                                     Sprites.ThirdPreview = Sprites.sprites.ElementAt(index).Value;
@@ -204,9 +204,9 @@ public class ImageChangePage : MonoBehaviour {
                             var sprite = floor.GetIcon();
                             sprite.transform.DOKill(false);
                             sprite.transform.DOScale(new Vector3(0.7f, 0.7f), 0.5f);
-                            if(scrController.instance.chosenplanet.isRed)
+                            if(scrController.instance.planetarySystem.chosenPlanet.isRed)
                                 Sprites.RedPreview = null;
-                            else if(!scrController.instance.chosenplanet.isExtra)
+                            else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra)
                                 Sprites.BluePreview = null;
                             else
                                 Sprites.ThirdPreview = null;
@@ -221,26 +221,26 @@ public class ImageChangePage : MonoBehaviour {
                             sprite.transform.DOComplete(false);
                             int index = instance.page * 23 + copyJ * 6 + copyI;
                             if(Input.GetMouseButtonUp(0))
-                                if((scrController.instance.chosenplanet.isRed ? Sprites.RedSelected : (!scrController.instance.chosenplanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected)) == index) {
-                                    if(scrController.instance.chosenplanet.isRed)
+                                if((scrController.instance.planetarySystem.chosenPlanet.isRed ? Sprites.RedSelected : !scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == index) {
+                                    if(scrController.instance.planetarySystem.chosenPlanet.isRed)
                                         Sprites.RedSelected = -1;
-                                    else if(!scrController.instance.chosenplanet.isExtra)
+                                    else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra)
                                         Sprites.BlueSelected = -1;
                                     else
                                         Sprites.ThirdSelected = -1;
                                 } else {
-                                    if(scrController.instance.chosenplanet.isRed)
+                                    if(scrController.instance.planetarySystem.chosenPlanet.isRed)
                                         Sprites.RedSelected = index;
-                                    else if(!scrController.instance.chosenplanet.isExtra)
+                                    else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra)
                                         Sprites.BlueSelected = index;
                                     else
                                         Sprites.ThirdSelected = index;
                                 }
                             else if(Input.GetMouseButtonUp(1)) {
                                 Sprites.Remove(index);
-                                if(scrController.instance.chosenplanet.isRed)
+                                if(scrController.instance.planetarySystem.chosenPlanet.isRed)
                                     Sprites.RedPreview = null;
-                                else if(!scrController.instance.chosenplanet.isExtra)
+                                else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra)
                                     Sprites.BluePreview = null;
                                 else
                                     Sprites.ThirdPreview = null;
@@ -298,7 +298,7 @@ public class ImageChangePage : MonoBehaviour {
             var obj = images.transform.GetChild(i);
             Sprites.Apply(obj.GetIcon(), null);
             obj.GetName().text = null;
-            if((scrController.instance.chosenplanet.isRed ? Sprites.RedSelected : (!scrController.instance.chosenplanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected)) == i + page * 23)
+            if((scrController.instance.planetarySystem.chosenPlanet.isRed ? Sprites.RedSelected : (!scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected)) == i + page * 23)
                 obj.GetFloor().SetTileColor(Color.yellow);
             else
                 obj.GetFloor().SetTileColor(floorColor);

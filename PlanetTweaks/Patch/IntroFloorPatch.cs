@@ -15,19 +15,19 @@ public static class IntroFloorPatch {
     public static class StartPatch {
         public static void Postfix() {
             if(!FloorUtils.AddTeleportFloor(-2, -3, -15, -3, -18, -3.5f, false, action2: delegate {
-                   scrController.instance.chosenplanet = scrController.instance.redPlanet;
+                   scrController.instance.planetarySystem.chosenPlanet = scrController.instance.planetarySystem.planetRed;
                    scrController.instance.camy.zoomSize = 0.5f;
                    scrController.instance.camy.isPulsingOnHit = false;
                    new GameObject().AddComponent<ImageChangePage>();
                    if(Main.Settings.thirdPlanet) {
-                       scrController.instance.SetNumPlanets(3);
+                       scrController.instance.planetarySystem.SetNumPlanets(3);
                        scrFloor floor = FloorUtils.GetFloor(-15, -3);
                        floor.numPlanets = 3;
-                       scrController.instance.redPlanet.currfloor = floor;
-                       scrController.instance.bluePlanet.currfloor = floor;
+                       scrController.instance.planetarySystem.planetRed.currfloor = floor;
+                       scrController.instance.planetarySystem.planetBlue.currfloor = floor;
                        PlanetUtils.GetThirdPlanet().currfloor = floor;
-                       scrController.instance.redPlanet.Set("endingTween", 1);
-                       scrController.instance.bluePlanet.Set("endingTween", 1);
+                       scrController.instance.planetarySystem.planetRed.Set("endingTween", 1);
+                       scrController.instance.planetarySystem.planetBlue.Set("endingTween", 1);
                        PlanetUtils.GetThirdPlanet().Set("endingTween", 1);
                    }
                }, parent: GameObject.Find("outer ring").transform))
