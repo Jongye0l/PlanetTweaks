@@ -24,35 +24,31 @@ public static class PlanetAwakePatch {
     }
 }
 
-[HarmonyPatch(typeof(scrPlanet), "LoadPlanetColor")]
+[HarmonyPatch(typeof(PlanetRenderer), "LoadPlanetColor")]
 public static class LoadPlanetColorPatch {
-    public static void Postfix(scrPlanet __instance) {
-        if(__instance.dummyPlanets || __instance.planetRenderer.objectDecoration)
+    public static void Postfix(PlanetRenderer __instance) {
+        scrPlanet planet = __instance.GetComponent<scrPlanet>();
+        if(planet.dummyPlanets || __instance.objectDecoration)
             return;
-        if(__instance.planetRenderer.sprite.visible)
-            if(__instance.isRed)
-                Sprites.RedSelected = Sprites.RedSelected;
-            else if(!__instance.isExtra)
-                Sprites.BlueSelected = Sprites.BlueSelected;
-            else {
-                Sprites.ThirdSelected = Sprites.ThirdSelected;
-                ColorUtils.SetThirdColor();
-            }
+        if(!__instance.sprite.visible) return;
+        if(planet.isRed) Sprites.RedSelected = Sprites.RedSelected;
+        else if(!planet.isExtra) Sprites.BlueSelected = Sprites.BlueSelected;
+        else {
+            Sprites.ThirdSelected = Sprites.ThirdSelected;
+            ColorUtils.SetThirdColor();
+        }
     }
 }
 
 [HarmonyPatch(typeof(scrController), "Awake")]
-[HarmonyPatch(typeof(scrController), "ColorPlanets")]
-[HarmonyPatch(typeof(scrController), "SetNumPlanets")]
+[HarmonyPatch(typeof(PlanetarySystem), "ColorPlanets")]
+[HarmonyPatch(typeof(PlanetarySystem), "SetNumPlanets")]
 public static class ThirdPlanetPatch {
     public static void Postfix() {
         Sprites.ThirdSelected = Sprites.ThirdSelected;
         ColorUtils.SetThirdColor();
         SpriteRenderer renderer = PlanetUtils.GetThirdPlanet().GetOrAddRenderer();
         renderer.transform.localScale = new Vector3(Main.Settings.thirdSize, Main.Settings.thirdSize);
-        if(Main.Settings.thirdColor)
-            renderer.color = ColorUtils.GetThirdColor();
-        else
-            renderer.color = Color.white;
+        renderer.color = Main.Settings.thirdColor ? ColorUtils.GetThirdColor() : Color.white;
     }
 }

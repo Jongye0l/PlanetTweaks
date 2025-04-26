@@ -23,7 +23,7 @@ public static class Sprites {
             GameObject obj = new GameObject("PlanetTweaksRenderer");
             obj.AddComponent<RendererController>();
             renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sortingOrder = planet.planetRenderer.sprite.Get<SpriteRenderer>("meshRenderer").sortingOrder + 1;
+            renderer.sortingOrder = planet.planetRenderer.sprite.meshRenderer.sortingOrder + 1;
             renderer.sortingLayerID = planet.planetRenderer.faceDetails.sortingLayerID;
             renderer.sortingLayerName = planet.planetRenderer.faceDetails.sortingLayerName;
             renderer.transform.SetParent(planet.transform);
