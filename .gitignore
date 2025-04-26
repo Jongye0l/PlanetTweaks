@@ -1,6 +1,11 @@
-.vs
-*.bat
-PlanetTweaks/bin
-PlanetTweaks/obj
-/PlanetTweaks/Properties/AssemblyInfo.cs
-packages
+# Intellij Idea
+.idea
+*.sln.DotSettings.user
+
+# Compile File
+*.dll
+bin/
+obj/
+
+# Library
+packages/
