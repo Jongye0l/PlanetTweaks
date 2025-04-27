@@ -1,34 +1,34 @@
 ﻿using ADOFAI.ModdingConvenience;
 using ByteSheep.Events;
 using DG.Tweening;
+using JALib.Tools;
 using UnityEngine;
 
 namespace PlanetTweaks.Utils;
 
 public static class FloorUtils {
     public static scrFloor AddFloor(float x, float y, Transform parent = null) {
-        var obj = CreateFloor(parent);
+        scrFloor obj = CreateFloor(parent);
         obj.transform.position = new Vector3(x, y);
         return obj;
     }
 
     public static scrFloor AddEventFloor(float x, float y, QuickAction action, Transform parent = null) {
-        var obj = CreateGem(parent);
+        scrFloor obj = CreateGem(parent);
         obj.transform.position = new Vector3(x, y);
-        var func = obj.gameObject.AddComponent<ffxCallFunction>();
-        func.ue = new QuickEvent();
-        func.ue.persistentCalls = new QuickPersistentCallGroup();
+        ffxCallFunction func = obj.gameObject.AddComponent<ffxCallFunction>();
+        func.ue = new QuickEvent {
+            persistentCalls = new QuickPersistentCallGroup()
+        };
         func.ue.AddListener(action);
         return obj;
     }
 
     public static scrFloor AddTeleportFloor(float x, float y, float targetX, float targetY, float cameraX, float cameraY, bool cameraMoving = true, PositionState state = PositionState.None, QuickAction action1 = null, QuickAction action2 = null, Transform parent = null) {
         return AddEventFloor(x, y, delegate {
-            if(action1 != null)
-                action1.Invoke();
+            action1?.Invoke();
             scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, delegate {
-                if(action2 != null)
-                    action2.Invoke();
+                action2?.Invoke();
                 scrController.instance.planetarySystem.chosenPlanet.transform.LocalMoveXY(targetX, targetY);
                 scrController.instance.planetarySystem.chosenPlanet.transform.position = new Vector3(targetX, targetY);
                 scrController.instance.camy.ViewObjectInstant(scrController.instance.planetarySystem.chosenPlanet.transform, false);
@@ -54,7 +54,7 @@ public static class FloorUtils {
         floor.DOKill(true);
         floor.gameObject.SetActive(false);
         scrGem gem = floor.gameObject.AddComponent<scrGem>();
-        gem.Method("LocalRotate");
+        gem.Invoke("LocalRotate");
         Object.DestroyImmediate(gem);
         floor.gameObject.SetActive(true);
         return floor;

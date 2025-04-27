@@ -53,7 +53,7 @@ public class RenameInputField : MonoBehaviour {
     public void Hide() {
         CanvasGroup.interactable = false;
         CanvasGroup.blocksRaycasts = false;
-        this.DOKill(false);
+        this.DOKill();
         DOTween.To(() => CanvasGroup.alpha, a => CanvasGroup.alpha = a, 0, 0.5f).SetTarget(this);
         onHide?.Invoke(InputField.text);
         onHide = null;

@@ -9,9 +9,9 @@ namespace PlanetTweaks.Utils;
 
 public static class GifUtils {
     public static List<(int, Sprite)> GetFrames(this Image image) {
-        FrameDimension fd = new FrameDimension(image.FrameDimensionsList[0]);
+        FrameDimension fd = new(image.FrameDimensionsList[0]);
         int frameCount = image.GetFrameCount(fd);
-        List<(int, Sprite)> frames = new List<(int, Sprite)>();
+        List<(int, Sprite)> frames = [];
         if(frameCount > 1) {
             byte[] times = image.GetPropertyItem(0x5100).Value;
             for(int i = 0; i < frameCount; i++) {
@@ -21,8 +21,7 @@ public static class GifUtils {
                 spr.name = "frame_" + i;
                 frames.Add((length, spr));
             }
-        } else
-            frames.Add((1000, ToSprite(new Bitmap(image))));
+        } else frames.Add((1000, ToSprite(new Bitmap(image))));
         return frames;
     }
 

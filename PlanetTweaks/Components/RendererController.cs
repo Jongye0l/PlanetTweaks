@@ -12,10 +12,8 @@ public class RendererController : MonoBehaviour {
     }
 
     private void Update() {
-        if(!planet)
-            planet = GetComponentInParent<scrPlanet>();
-        if(!renderer)
-            renderer = planet.GetOrAddRenderer();
+        if(!planet) planet = GetComponentInParent<scrPlanet>();
+        if(!renderer) renderer = planet.GetOrAddRenderer();
         if(planet && renderer) {
             if(planet.dummyPlanets) {
                 Destroy(gameObject);

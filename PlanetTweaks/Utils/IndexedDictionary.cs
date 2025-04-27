@@ -13,24 +13,22 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
         }
         set {
             int index = keys.IndexOf(key);
-            if(index != -1)
-                values[index] = value;
+            if(index != -1) values[index] = value;
         }
     }
 
     public ICollection<K> Keys => keys;
     public ICollection<V> Values => values;
 
-    private List<K> keys = new List<K>();
-    private List<V> values = new List<V>();
+    private List<K> keys = [];
+    private List<V> values = [];
 
     public int Count => keys.Count;
 
     public bool IsReadOnly => false;
 
     public void Add(K key, V value) {
-        if(ContainsKey(key))
-            throw new ArgumentException("item already exists!");
+        if(ContainsKey(key)) throw new ArgumentException("item already exists!");
         keys.Add(key);
         values.Add(value);
     }
@@ -40,8 +38,7 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
     }
 
     public void Insert(int index, K key, V value) {
-        if(ContainsKey(key))
-            throw new ArgumentException("item already exists!");
+        if(ContainsKey(key)) throw new ArgumentException("item already exists!");
         keys.Insert(index, key);
         values.Insert(index, value);
     }
@@ -52,8 +49,7 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
 
     public void Replace(int index, K key, V value) {
         int i = keys.IndexOf(key);
-        if(i != -1 && i != index)
-            throw new ArgumentException("item already exists!");
+        if(i != -1 && i != index) throw new ArgumentException("item already exists!");
         keys[index] = key;
         values[index] = value;
     }
@@ -64,8 +60,7 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
 
     public void Replace(K prevKey, K key, V value) {
         int index = keys.IndexOf(prevKey);
-        if(index != -1)
-            Replace(index, key, value);
+        if(index != -1) Replace(index, key, value);
     }
 
     public void Replace(K prevKey, KeyValuePair<K, V> item) {
@@ -96,16 +91,13 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
 
     public bool Remove(K key) {
         int index = keys.IndexOf(key);
-        if(index == -1)
-            return false;
+        if(index == -1) return false;
         keys.RemoveAt(index);
         values.RemoveAt(index);
         return true;
     }
 
-    public bool Remove(KeyValuePair<K, V> item) {
-        return Remove(item.Key);
-    }
+    public bool Remove(KeyValuePair<K, V> item) => Remove(item.Key);
 
     public bool TryGetValue(K key, out V value) {
         int index = keys.IndexOf(key);
@@ -117,11 +109,7 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
         return true;
     }
 
-    public KeyValuePair<K, V> ElementAt(int index) {
-        return new KeyValuePair<K, V>(keys[index], values[index]);
-    }
+    public KeyValuePair<K, V> ElementAt(int index) => new KeyValuePair<K, V>(keys[index], values[index]);
 
-    IEnumerator IEnumerable.GetEnumerator() {
-        return GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

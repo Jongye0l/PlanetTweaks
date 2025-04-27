@@ -16,37 +16,33 @@ public static class ColorUtils {
     }
 
     public static Color GetThirdColor() {
-        switch(Main.Settings.thirdColorType) {
+        switch(Main.settings.thirdColorType) {
             case 0:
                 return GetDefaultThirdColor();
             case 1:
             case 2:
-                return Persistence.GetPlayerColor(Main.Settings.thirdColorType == 1);
+                return Persistence.GetPlayerColor(Main.settings.thirdColorType == 1);
             case 3:
-                return GetCustomThirdColor();
+                return Main.settings.thirdColorCustom;
             default:
                 return new Color(0.3f, 0.7f, 1);
         }
     }
 
-    public static void SetThirdColor(Color? c = null) {
-        if(scrController.instance.levelName == "T5-X" && GCS.enableCutsceneT5)
-            return;
+    public static void SetThirdColor() => SetThirdColor(GetThirdColor());
+
+    public static void SetThirdColor(Color c) {
+        if(scrController.instance.levelName == "T5-X" && GCS.enableCutsceneT5) return;
         scrPlanet planet = PlanetUtils.GetThirdPlanet();
-        if(!planet)
-            return;
-        if(c == null)
-            c = GetThirdColor();
-        if(c == PlanetRenderer.goldColor) {
-            planet.planetRenderer.SwitchToGold();
-        } else if(c == PlanetRenderer.rainbowColor) {
+        if(!planet) return;
+        if(c == PlanetRenderer.goldColor) planet.planetRenderer.SwitchToGold();
+        else if(c == PlanetRenderer.rainbowColor) {
             planet.planetRenderer.DisableAllSpecialPlanets();
             planet.planetRenderer.EnableCustomColor();
             planet.planetRenderer.SetRainbow(true);
-        } else if(c == PlanetRenderer.overseerColor) {
-            planet.planetRenderer.SwitchToOverseer();
-        } else {
-            Color realColor = scrMisc.PlayerColorToRealColor(c.Value);
+        } else if(c == PlanetRenderer.overseerColor) planet.planetRenderer.SwitchToOverseer();
+        else {
+            Color realColor = scrMisc.PlayerColorToRealColor(c);
             Color tailColor = realColor;
             if(realColor == PlanetRenderer.transBlueColor || realColor == PlanetRenderer.transPinkColor || realColor == PlanetRenderer.nbYellowColor) {
                 tailColor = Color.white;
@@ -65,18 +61,12 @@ public static class ColorUtils {
         Color blueOrigin = Persistence.GetPlayerColor(false);
         Color red = scrMisc.PlayerColorToRealColor(redOrigin);
         Color blue = scrMisc.PlayerColorToRealColor(blueOrigin);
-        if(red == Color.red && blue == Color.blue) {
-            return new Color(0.3f, 0.7f, 0);
-        }
-        if(red == blue) {
-            return redOrigin;
-        }
+        if(red == Color.red && blue == Color.blue) return new Color(0.3f, 0.7f, 0);
+        if(red == blue) return redOrigin;
         if(redOrigin == PlanetRenderer.transPinkColor && blueOrigin == PlanetRenderer.transBlueColor
            || blueOrigin == PlanetRenderer.transPinkColor && redOrigin == PlanetRenderer.transBlueColor
            || redOrigin == PlanetRenderer.nbYellowColor && blueOrigin == PlanetRenderer.nbPurpleColor
-           || blueOrigin == PlanetRenderer.nbYellowColor && redOrigin == PlanetRenderer.nbPurpleColor) {
-            return Color.white;
-        }
+           || blueOrigin == PlanetRenderer.nbYellowColor && redOrigin == PlanetRenderer.nbPurpleColor) return Color.white;
         Color.RGBToHSV(red, out float redH, out float redS, out float redV);
         Color.RGBToHSV(blue, out float blueH, out float blueS, out float blueV);
         float n1 = 1 - Mathf.Abs(blueH - redH) > Mathf.Abs(blueH - redH) ? Mathf.Max(redH, blueH) : Mathf.Min(redH, blueH);
@@ -90,10 +80,6 @@ public static class ColorUtils {
         float s = n3 + (n5 - n3) / 2;
         float v = n4 + (n6 - n4) / 2;
         return Color.HSVToRGB(h, s, v);
-    }
-
-    public static Color GetCustomThirdColor() {
-        return new Color((float) Main.Settings.thirdColorRed / 255, (float) Main.Settings.thirdColorGreen / 255, (float) Main.Settings.thirdColorBlue / 255);
     }
 
     public static string Hex(this Color c, bool useAlpha = false, bool hash = true) {

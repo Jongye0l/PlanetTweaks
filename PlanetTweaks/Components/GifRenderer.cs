@@ -11,8 +11,7 @@ public class GifRenderer : MonoBehaviour {
     private float offset;
 
     public void Update() {
-        if(Image == null || !Renderer || !Renderer.enabled)
-            return;
+        if(Image == null || !Renderer || !Renderer.enabled) return;
         long elapsed = (long) (((timePassed += Time.unscaledDeltaTime) * 1000) + offset);
         if(elapsed >= Image.Length) {
             timePassed = 0;
@@ -22,8 +21,7 @@ public class GifRenderer : MonoBehaviour {
     }
 
     public void LateUpdate() {
-        if(Image == null || !Renderer || !Renderer.enabled)
-            return;
+        if(Image == null || !Renderer || !Renderer.enabled) return;
         Renderer.sprite = Image.GetFrameAt((long) ((timePassed * 1000) + offset));
     }
 }

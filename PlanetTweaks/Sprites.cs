@@ -11,15 +11,17 @@ using UnityEngine;
 namespace PlanetTweaks;
 
 public static class Sprites {
-    public static IndexedDictionary<string, object> sprites = new IndexedDictionary<string, object>();
+    public static IndexedDictionary<string, object> sprites = new();
     private static VistaOpenFileDialog fileDialog;
     private static VistaFolderBrowserDialog dirDialog;
+
+    public static string GetPath() => Path.Combine(Main.instance.Path, "sprites");
 
     public static SpriteRenderer GetOrAddRenderer(this scrPlanet planet) {
         if(!planet) return null;
         SpriteRenderer renderer = planet.transform.Find("PlanetTweaksRenderer")?.GetComponent<SpriteRenderer>();
         if(!renderer) {
-            GameObject obj = new GameObject("PlanetTweaksRenderer");
+            GameObject obj = new("PlanetTweaksRenderer");
             obj.AddComponent<RendererController>();
             renderer = obj.AddComponent<SpriteRenderer>();
             renderer.sortingOrder = planet.planetRenderer.GetComponent<SpriteRenderer>().sortingOrder + 1;
@@ -80,11 +82,11 @@ public static class Sprites {
 
     public static int RedSelected {
         get {
-            if(Main.Settings.redSelected == null)
+            if(Main.settings.redSelected == null)
                 return -1;
-            if(sprites.ContainsKey(Main.Settings.redSelected))
-                return sprites.Keys.ToList().IndexOf(Main.Settings.redSelected);
-            Main.Settings.redSelected = null;
+            if(sprites.ContainsKey(Main.settings.redSelected))
+                return sprites.Keys.ToList().IndexOf(Main.settings.redSelected);
+            Main.settings.redSelected = null;
             return -1;
         }
 
@@ -92,14 +94,14 @@ public static class Sprites {
             var planet = scrController.instance?.planetarySystem?.planetRed;
 
             if(value < 0) {
-                Main.Settings.redSelected = null;
+                Main.settings.redSelected = null;
                 RedSprite = null;
                 Apply(planet, null);
                 return;
             }
             if(value >= sprites.Count) return;
             KeyValuePair<string, object> pair = sprites.ElementAt(value);
-            Main.Settings.redSelected = pair.Key;
+            Main.settings.redSelected = pair.Key;
             RedSprite = pair.Value;
 
             if(!planet) return;
@@ -109,25 +111,25 @@ public static class Sprites {
 
     public static int BlueSelected {
         get {
-            if(Main.Settings.blueSelected == null)
+            if(Main.settings.blueSelected == null)
                 return -1;
-            if(sprites.ContainsKey(Main.Settings.blueSelected))
-                return sprites.Keys.ToList().IndexOf(Main.Settings.blueSelected);
-            Main.Settings.blueSelected = null;
+            if(sprites.ContainsKey(Main.settings.blueSelected))
+                return sprites.Keys.ToList().IndexOf(Main.settings.blueSelected);
+            Main.settings.blueSelected = null;
             return -1;
         }
 
         set {
             scrPlanet planet = scrController.instance?.planetarySystem?.planetBlue;
             if(value < 0) {
-                Main.Settings.blueSelected = null;
+                Main.settings.blueSelected = null;
                 BlueSprite = null;
                 Apply(planet, null);
                 return;
             }
             if(value >= sprites.Count) return;
             KeyValuePair<string, object> pair = sprites.ElementAt(value);
-            Main.Settings.blueSelected = pair.Key;
+            Main.settings.blueSelected = pair.Key;
             BlueSprite = pair.Value;
 
             if(!planet) return;
@@ -137,25 +139,25 @@ public static class Sprites {
 
     public static int ThirdSelected {
         get {
-            if(Main.Settings.thirdSelected == null)
+            if(Main.settings.thirdSelected == null)
                 return -1;
-            if(sprites.ContainsKey(Main.Settings.thirdSelected))
-                return sprites.Keys.ToList().IndexOf(Main.Settings.thirdSelected);
-            Main.Settings.thirdSelected = null;
+            if(sprites.ContainsKey(Main.settings.thirdSelected))
+                return sprites.Keys.ToList().IndexOf(Main.settings.thirdSelected);
+            Main.settings.thirdSelected = null;
             return -1;
         }
 
         set {
             var planet = PlanetUtils.GetThirdPlanet();
             if(value < 0) {
-                Main.Settings.thirdSelected = null;
+                Main.settings.thirdSelected = null;
                 ThirdSprite = null;
                 Apply(planet, null);
                 return;
             }
             if(value >= sprites.Count) return;
             KeyValuePair<string, object> pair = sprites.ElementAt(value);
-            Main.Settings.thirdSelected = pair.Key;
+            Main.settings.thirdSelected = pair.Key;
             ThirdSprite = pair.Value;
 
             if(!planet) return;
@@ -189,7 +191,7 @@ public static class Sprites {
         fileDialog.Multiselect = false;
 
         dirDialog = new VistaFolderBrowserDialog();
-        dirDialog.SelectedPath = Main.Settings.spriteDirectory;
+        dirDialog.SelectedPath = GetPath();
     }
 
     public static string ShowOpenFileDialog() {
@@ -198,7 +200,7 @@ public static class Sprites {
             try {
                 return fileDialog.FileName;
             } catch (Exception e) {
-                Main.Logger.Log(e.StackTrace);
+                Main.instance.Log(e.StackTrace);
             }
         }
         return null;
@@ -210,48 +212,17 @@ public static class Sprites {
             try {
                 return dirDialog.SelectedPath;
             } catch (Exception e) {
-                Main.Logger.Log(e.StackTrace);
+                Main.instance.Log(e.StackTrace);
             }
         }
         return null;
     }
 
     public static void Load() {
-        DirectoryInfo dir = Main.Settings.spriteDirectory.CreateIfNotExists();
+        DirectoryInfo dir = GetPath().CreateIfNotExists();
         foreach(FileInfo file in dir.GetFiles()) {
             try {
                 Add(Path.Combine(dir.FullName, file.Name));
-            } catch (Exception) { }
-        }
-    }
-
-    public static void Save() {
-        DirectoryInfo dir = Main.Settings.spriteDirectory.CreateIfNotExists();
-        foreach(FileInfo file in dir.GetFiles()) {
-            try {
-                file.Delete();
-            } catch (Exception) { }
-        }
-        foreach(DirectoryInfo directory in dir.GetDirectories()) {
-            try {
-                foreach(FileInfo file in directory.GetFiles()) {
-                    try {
-                        file.Delete();
-                    } catch (Exception) { }
-                }
-                directory.Delete();
-            } catch (Exception) { }
-        }
-        foreach(var pair in sprites) {
-            try {
-                if(pair.Value is Sprite spr) {
-                    Texture2D texture = spr.texture;
-                    byte[] bytes = texture.EncodeToPNG();
-                    string path = Path.Combine(dir.FullName, pair.Key + ".png");
-                    File.WriteAllBytes(path, bytes);
-                } else if(pair.Value is GifImage gif) {
-                    gif.Save(dir.FullName, pair.Key);
-                }
             } catch (Exception) { }
         }
     }
@@ -278,11 +249,11 @@ public static class Sprites {
     public static bool Remove(string name) {
         if(!sprites.ContainsKey(name))
             return false;
-        if(Main.Settings.redSelected == name)
+        if(Main.settings.redSelected == name)
             RedSelected = -1;
-        if(Main.Settings.blueSelected == name)
+        if(Main.settings.blueSelected == name)
             BlueSelected = -1;
-        if(Main.Settings.thirdSelected == name)
+        if(Main.settings.thirdSelected == name)
             ThirdSelected = -1;
         sprites.Remove(name);
         return true;
@@ -329,5 +300,13 @@ public static class Sprites {
             return Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
         }
         return null;
+    }
+
+    public static void Dispose() {
+        sprites = new IndexedDictionary<string, object>();
+        fileDialog.Dispose();
+        fileDialog = null;
+        dirDialog.Dispose();
+        dirDialog = null;
     }
 }
