@@ -13,9 +13,14 @@ public class Main : JAMod {
     public static SettingGUI settingGUI;
     private static GUIStyle labelStyle;
     private static GUIStyle labelStyle2;
-    private static readonly string[] CacheSettingStrings = new string[7];
-    private static int cachedVertices = -1;
+    private static string[] CacheSettingStrings;
+    private static int cachedVertices;
     private static Texture2D cachedTexture;
+
+    public Main() : base(typeof(Settings)) {
+        CacheSettingStrings = new string[7];
+        cachedVertices = -1;
+    }
 
     protected override void OnSetup() {
         settings = (Settings) Setting;
