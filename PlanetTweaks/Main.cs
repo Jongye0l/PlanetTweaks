@@ -67,13 +67,13 @@ public class Main : JAMod {
             scrController.instance.planetarySystem.planetBlue.GetOrAddRenderer().transform.localScale = new Vector2(settings.blueSize, settings.blueSize);
         });
         if(GUILayout.Toggle(false, $"<color={ColorUtils.GetRealColor(true).Hex()}>{localization["Setting.RedColor"]}</color> " + localization["Setting.ColorBehind"] +
-                                   $"  <color=grey>{(setting.redColor ? "O" : "Ⅹ")}</color>")) {
+                                   $"  <color=grey>{(setting.redColor ? "O" : "Ⅹ")}</color>", labelStyle)) {
             setting.redColor = !setting.redColor;
             scrController.instance.planetarySystem.planetRed.GetOrAddRenderer().color = setting.redColor ? ColorUtils.GetRealColor(true) : Color.white;
             SaveSetting();
         }
         if(GUILayout.Toggle(false, $"<color={ColorUtils.GetRealColor(false).Hex()}>{localization["Setting.BlueColor"]}</color> " + localization["Setting.ColorBehind"] +
-                                   $"  <color=grey>{(setting.blueColor ? "O" : "Ⅹ")}</color>")) {
+                                   $"  <color=grey>{(setting.blueColor ? "O" : "Ⅹ")}</color>", labelStyle)) {
             setting.blueColor = !setting.blueColor;
             scrController.instance.planetarySystem.planetBlue.GetOrAddRenderer().color = setting.blueColor ? ColorUtils.GetRealColor(false) : Color.white;
             SaveSetting();
@@ -90,7 +90,7 @@ public class Main : JAMod {
                 PlanetUtils.GetThirdPlanet().GetOrAddRenderer().transform.localScale = new Vector2(settings.thirdSize, settings.thirdSize);
             });
             if(GUILayout.Toggle(false, $"<color={ColorUtils.GetRealColor(false).Hex()}>{localization["Setting.ThirdColor"]}</color> " + localization["Setting.ColorBehind"] +
-                                       $"  <color=grey>{(setting.thirdColor ? "O" : "Ⅹ")}</color>")) {
+                                       $"  <color=grey>{(setting.thirdColor ? "O" : "Ⅹ")}</color>", labelStyle)) {
                 setting.thirdColor = !setting.thirdColor;
                 PlanetUtils.GetThirdPlanet().GetOrAddRenderer().color = setting.blueColor ? ColorUtils.GetRealThirdColor() : Color.white;
                 SaveSetting();
