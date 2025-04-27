@@ -25,7 +25,7 @@ public class Main : JAMod {
     protected override void OnSetup() {
         settings = (Settings) Setting;
         settingGUI = new SettingGUI(this);
-        ImageChangePage.Init();
+        MainThread.Run(this, ImageChangePage.Init);
         Patcher.AddPatch(typeof(Patch));
     }
 
@@ -35,7 +35,6 @@ public class Main : JAMod {
         Sprites.Init();
         if(!scrController.instance) return;
         foreach(scrPlanet planet in scrController.instance.planetarySystem.allPlanets) planet.GetOrAddRenderer();
-
     }
 
     protected override void OnDisable() {
@@ -128,16 +127,14 @@ public class Main : JAMod {
         settingGUI.AddSettingInt(ref setting.shapedAngle, 4, ref CacheSettingStrings[6], localization["Setting.ShapedAngle"], 2);
         if(cachedVertices != settings.shapedAngle || !cachedTexture) {
             cachedTexture = new Texture2D(100, 100);
-            Vector2Int middle = new Vector2Int(50, 50);
+            Vector2Int middle = new(50, 50);
             for(int i = 0; i < settings.shapedAngle; i++) {
                 float angle = Mathf.PI * 2 / settings.shapedAngle * i;
                 Vector2Int point = middle + new Vector2Int((int) (Mathf.Sin(angle) * 30), (int) (Mathf.Cos(angle) * 30));
-                for(int j = -10; j <= 10; j++) {
-                    for(int k = -10; k <= 10; k++) {
+                for(int j = -10; j <= 10; j++)
+                    for(int k = -10; k <= 10; k++)
                         if(j * j + k * k <= 10 * 10)
                             cachedTexture.SetPixel(point.x + j, point.y + k, Color.black);
-                    }
-                }
             }
             cachedTexture.Apply();
             cachedVertices = settings.shapedAngle;
