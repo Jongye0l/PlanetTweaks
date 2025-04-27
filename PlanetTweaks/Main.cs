@@ -182,8 +182,13 @@ public class Main : JAMod {
         if(sub != null) settings.thirdColorCustom.g = float.Parse(sub.Value) / 255;
         sub = root.Element("thirdColorBlue");
         if(sub != null) settings.thirdColorCustom.b = float.Parse(sub.Value) / 255;
-        sub = root.Element("spriteDirectory");
         instance.SaveSetting();
+        sub = root.Element("spriteDirectory");
+        try {
+            File.Delete(path);
+        } catch (Exception) {
+            // ignored
+        }
         if(sub == null || sub.Value == Sprites.GetPath()) return;
         foreach(string file in Directory.GetFiles(sub.Value))
             try {
