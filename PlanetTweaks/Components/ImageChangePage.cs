@@ -107,7 +107,7 @@ public class ImageChangePage : MonoBehaviour {
                     JALocalization localization = Main.instance.Localization;
                     instance.planetText.text = (planetarySystem.chosenPlanet.isRed   ? $"<color={ColorUtils.GetRealColor(true).Hex()}>{localization["Setting.RedColor"]}</color>" :
                                                 planetarySystem.chosenPlanet.isExtra ? $"<color={ColorUtils.GetRealColor(false).Hex()}>{localization["Setting.BlueColor"]}</color>" :
-                                                                                       $"<color={ColorUtils.GetRealThirdColor().Hex()}>{localization["Setting,ThirdColor"]}</color>")
+                                                                                       $"<color={ColorUtils.GetRealThirdColor().Hex()}>{localization["Setting.ThirdColor"]}</color>")
                         + ' ' + localization["ChangePage.Selected"];
                     instance.UpdateFloorIcons();
                     scrUIController.instance.WipeFromBlack();
@@ -313,7 +313,7 @@ public class ImageChangePage : MonoBehaviour {
         JALocalization localization = Main.instance.Localization;
         planetText = new GameObject().AddComponent<TextMesh>();
         planetText.richText = true;
-        planetText.text = $"<color={ColorUtils.GetRealColor(true).Hex()}>{localization["Setting.RedColor"]}</color> ${localization["ChangePage.Selected"]}";
+        planetText.text = $"<color={ColorUtils.GetRealColor(true).Hex()}>{localization["Setting.RedColor"]}</color> {localization["ChangePage.Selected"]}";
         planetText.SetLocalizedFont();
         planetText.fontSize = 100;
         planetText.anchor = TextAnchor.UpperCenter;
