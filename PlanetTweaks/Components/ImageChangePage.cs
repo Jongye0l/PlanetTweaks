@@ -106,7 +106,7 @@ public class ImageChangePage : MonoBehaviour {
                     planetarySystem.chosenPlanet.transform.position = new Vector3(-15, -3);
                     JALocalization localization = Main.instance.Localization;
                     instance.planetText.text = (planetarySystem.chosenPlanet.isRed   ? $"<color={ColorUtils.GetRealColor(true).Hex()}>{localization["Setting.RedColor"]}</color>" :
-                                                planetarySystem.chosenPlanet.isExtra ? $"<color={ColorUtils.GetRealColor(false).Hex()}>{localization["Setting.BlueColor"]}</color>" :
+                                                !planetarySystem.chosenPlanet.isExtra ? $"<color={ColorUtils.GetRealColor(false).Hex()}>{localization["Setting.BlueColor"]}</color>" :
                                                                                        $"<color={ColorUtils.GetRealThirdColor().Hex()}>{localization["Setting.ThirdColor"]}</color>")
                         + ' ' + localization["ChangePage.Selected"];
                     instance.UpdateFloorIcons();
