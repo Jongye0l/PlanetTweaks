@@ -29,15 +29,17 @@ public static class FloorUtils {
             action1?.Invoke();
             scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, delegate {
                 action2?.Invoke();
-                scrController.instance.planetarySystem.chosenPlanet.transform.LocalMoveXY(targetX, targetY);
-                scrController.instance.planetarySystem.chosenPlanet.transform.position = new Vector3(targetX, targetY);
-                scrController.instance.camy.ViewObjectInstant(scrController.instance.planetarySystem.chosenPlanet.transform, false);
-                scrController.instance.camy.ViewVectorInstant(new Vector2(cameraX, cameraY), false);
-                scrController.instance.camy.isMoveTweening = cameraMoving;
-                scrController.instance.camy.positionState = state;
+                scrController controller = scrController.instance;
+                PlanetarySystem planetarySystem = controller.planetarySystem;
+                planetarySystem.chosenPlanet.transform.LocalMoveXY(targetX, targetY);
+                planetarySystem.chosenPlanet.transform.position = new Vector3(targetX, targetY);
+                controller.camy.ViewObjectInstant(planetarySystem.chosenPlanet.transform);
+                controller.camy.ViewVectorInstant(new Vector2(cameraX, cameraY));
+                controller.camy.isMoveTweening = cameraMoving;
+                controller.camy.positionState = state;
                 scrUIController.instance.WipeFromBlack();
                 scrFloor component = GetFloor(targetX, targetY).GetComponent<scrFloor>();
-                scrController.instance.planetarySystem.planetList.ForEach(p => p.currfloor = component);
+                planetarySystem.planetList.ForEach(p => p.currfloor = component);
             });
         }, parent);
     }

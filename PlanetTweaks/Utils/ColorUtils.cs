@@ -33,7 +33,7 @@ public static class ColorUtils {
 
     public static void SetThirdColor(Color c) {
         if(scrController.instance.levelName == "T5-X" && GCS.enableCutsceneT5) return;
-        scrPlanet planet = PlanetUtils.GetThirdPlanet();
+        scrPlanet planet = scrController.instance.planetarySystem.planetGreen;
         if(!planet) return;
         if(c == PlanetRenderer.goldColor) planet.planetRenderer.SwitchToGold();
         else if(c == PlanetRenderer.rainbowColor) {

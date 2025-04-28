@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using ADOFAI.ModdingConvenience;
 using DG.Tweening;
 using JALib.Core;
@@ -50,20 +51,23 @@ public static class Patch {
     [JAPatch(typeof(scnLevelSelect), nameof(Start), PatchType.Postfix, false)]
     public static void Start() {
         if(!FloorUtils.AddTeleportFloor(-2, -3, -15, -3, -18, -3.5f, false, action2: delegate {
-               scrController.instance.planetarySystem.chosenPlanet = scrController.instance.planetarySystem.planetRed;
-               scrController.instance.camy.zoomSize = 0.5f;
-               scrController.instance.camy.isPulsingOnHit = false;
-               new GameObject().AddComponent<ImageChangePage>();
-               if(!Main.settings.thirdPlanet) return;
-               scrController.instance.planetarySystem.SetNumPlanets(3);
-               scrFloor floor = FloorUtils.GetFloor(-15, -3);
-               floor.numPlanets = 3;
-               scrController.instance.planetarySystem.planetRed.currfloor = floor;
-               scrController.instance.planetarySystem.planetBlue.currfloor = floor;
-               PlanetUtils.GetThirdPlanet().currfloor = floor;
-               scrController.instance.planetarySystem.planetRed.SetValue("endingTween", 1);
-               scrController.instance.planetarySystem.planetBlue.SetValue("endingTween", 1);
-               PlanetUtils.GetThirdPlanet().SetValue("endingTween", 1);
+                scrController controller = scrController.instance;
+                PlanetarySystem planetarySystem = controller.planetarySystem;
+                planetarySystem.chosenPlanet = planetarySystem.planetRed;
+                controller.camy.zoomSize = 0.5f;
+                controller.camy.isPulsingOnHit = false;
+                new GameObject().AddComponent<ImageChangePage>();
+                if(!Main.settings.thirdPlanet) return;
+                planetarySystem.SetNumPlanets(3);
+                scrFloor floor = FloorUtils.GetFloor(-15, -3);
+                floor.numPlanets = 3;
+                planetarySystem.planetRed.currfloor = floor;
+                planetarySystem.planetBlue.currfloor = floor;
+                planetarySystem.planetGreen.currfloor = floor;
+                FieldInfo field = typeof(scrPlanet).Field("endingTween");
+                field.SetValue(planetarySystem.planetRed, 1);
+                field.SetValue(planetarySystem.planetBlue, 1);
+                field.SetValue(planetarySystem.planetGreen, 1);
            }, parent: GameObject.Find("outer ring").transform)) return;
         if(!FloorUtils.AddEventFloor(-15, -3, null)) FloorUtils.AddFloor(-15, -3);
         scrFloor exitFloor = FloorUtils.AddFloor(-13.9f, -5.65f);
@@ -179,7 +183,7 @@ public static class Patch {
     public static void ColorPlanets() {
         Sprites.ThirdSelected = Sprites.ThirdSelected;
         ColorUtils.SetThirdColor();
-        SpriteRenderer renderer = PlanetUtils.GetThirdPlanet().GetOrAddRenderer();
+        SpriteRenderer renderer = scrController.instance.planetarySystem.planetGreen.GetOrAddRenderer();
         renderer.transform.localScale = new Vector3(Main.settings.thirdSize, Main.settings.thirdSize);
         renderer.color = Main.settings.thirdColor ? ColorUtils.GetThirdColor() : Color.white;
     }

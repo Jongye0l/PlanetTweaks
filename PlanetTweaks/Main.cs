@@ -60,6 +60,7 @@ public class Main : JAMod {
         JALocalization localization = Localization;
         Settings setting = settings;
         SettingGUI settingGUI = Main.settingGUI;
+        PlanetarySystem planetarySystem = scrController.instance.planetarySystem;
         settingGUI.AddSettingSliderFloat(ref setting.redSize, 1, ref _cacheSettingStrings[0], localization["Setting.RedPlanetSize"], 0, 2, () => {
             scrController.instance.planetarySystem.planetRed.GetOrAddRenderer().transform.localScale = new Vector2(settings.redSize, settings.redSize);
         });
@@ -69,13 +70,13 @@ public class Main : JAMod {
         if(GUILayout.Toggle(false, $"<color={ColorUtils.GetRealColor(true).Hex()}>{localization["Setting.RedColor"]}</color> " + localization["Setting.ColorBehind"] +
                                    $"  <color=grey>{(setting.redColor ? "O" : "Ⅹ")}</color>", labelStyle)) {
             setting.redColor = !setting.redColor;
-            scrController.instance.planetarySystem.planetRed.GetOrAddRenderer().color = setting.redColor ? ColorUtils.GetRealColor(true) : Color.white;
+            planetarySystem.planetRed.GetOrAddRenderer().color = setting.redColor ? ColorUtils.GetRealColor(true) : Color.white;
             SaveSetting();
         }
         if(GUILayout.Toggle(false, $"<color={ColorUtils.GetRealColor(false).Hex()}>{localization["Setting.BlueColor"]}</color> " + localization["Setting.ColorBehind"] +
                                    $"  <color=grey>{(setting.blueColor ? "O" : "Ⅹ")}</color>", labelStyle)) {
             setting.blueColor = !setting.blueColor;
-            scrController.instance.planetarySystem.planetBlue.GetOrAddRenderer().color = setting.blueColor ? ColorUtils.GetRealColor(false) : Color.white;
+            planetarySystem.planetBlue.GetOrAddRenderer().color = setting.blueColor ? ColorUtils.GetRealColor(false) : Color.white;
             SaveSetting();
         }
         if(NeoCosmosManager.instance.installed && NeoCosmosManager.instance.own) {
@@ -87,12 +88,12 @@ public class Main : JAMod {
                 SaveSetting();
             }
             settingGUI.AddSettingSliderFloat(ref setting.thirdSize, 1, ref _cacheSettingStrings[2], localization["Setting.ThirdPlanetSize"], 0, 2, () => {
-                PlanetUtils.GetThirdPlanet().GetOrAddRenderer().transform.localScale = new Vector2(settings.thirdSize, settings.thirdSize);
+                scrController.instance.planetarySystem.planetGreen.GetOrAddRenderer().transform.localScale = new Vector2(settings.thirdSize, settings.thirdSize);
             });
             if(GUILayout.Toggle(false, $"<color={ColorUtils.GetRealColor(false).Hex()}>{localization["Setting.ThirdColor"]}</color> " + localization["Setting.ColorBehind"] +
                                        $"  <color=grey>{(setting.thirdColor ? "O" : "Ⅹ")}</color>", labelStyle)) {
                 setting.thirdColor = !setting.thirdColor;
-                PlanetUtils.GetThirdPlanet().GetOrAddRenderer().color = setting.blueColor ? ColorUtils.GetRealThirdColor() : Color.white;
+                planetarySystem.planetGreen.GetOrAddRenderer().color = setting.blueColor ? ColorUtils.GetRealThirdColor() : Color.white;
                 SaveSetting();
             }
             GUILayout.BeginHorizontal();

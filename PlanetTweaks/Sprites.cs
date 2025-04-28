@@ -70,7 +70,7 @@ public static class Sprites {
 
         set {
             thirdPreview = value;
-            scrPlanet planet = PlanetUtils.GetThirdPlanet();
+            scrPlanet planet = scrController.instance?.planetarySystem?.planetGreen;
             if(!planet) return;
             Apply(planet, value ?? ThirdSprite);
         }
@@ -148,7 +148,7 @@ public static class Sprites {
         }
 
         set {
-            var planet = PlanetUtils.GetThirdPlanet();
+            scrPlanet planet = scrController.instance?.planetarySystem?.planetGreen;
             if(value < 0) {
                 Main.settings.thirdSelected = null;
                 ThirdSprite = null;
