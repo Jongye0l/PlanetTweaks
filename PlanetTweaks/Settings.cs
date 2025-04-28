@@ -22,5 +22,5 @@ public class Settings(JAMod mod, JObject jsonObject = null) : JASetting(mod, jso
     public bool thirdColor = false;
     public bool thirdPlanet = false;
     public int thirdColorType;
-    public Color thirdColorCustom = new(0.3f, 0.7f, 0);
+    public Color thirdColorCustom = new(0.2980392156862745f, 0.6980392156862745f, 0);
 }
