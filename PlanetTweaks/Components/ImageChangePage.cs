@@ -145,7 +145,7 @@ public class ImageChangePage : MonoBehaviour {
                         delegate {
                             scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
                             if(!floor.GetIcon().sprite) return;
-                            floor.transform.DOKill(false);
+                            floor.transform.DOKill();
                             floor.transform.DOScale(new Vector3(1, 1), 0.5f).OnComplete(delegate {
                                 int index = instance.page * 23 + copyJ * 6 + copyI;
                                 if((scrController.instance.planetarySystem.chosenPlanet.isRed ? Sprites.RedSelected :
@@ -163,7 +163,7 @@ public class ImageChangePage : MonoBehaviour {
                         },
                         delegate {
                             scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
-                            floor.transform.DOKill(false);
+                            floor.transform.DOKill();
                             floor.transform.DOScale(new Vector3(0.8f, 0.8f), 0.5f);
                             floor.GetPreview().gameObject.SetActive(false);
                             SpriteRenderer sprite = floor.GetIcon();
@@ -219,7 +219,7 @@ public class ImageChangePage : MonoBehaviour {
                             int index = instance.page * 23 + copyJ * 6 + copyI;
                             if(index >= Sprites.sprites.Count) return;
                             instance.input = true;
-                            RenameInputField.Instance.Show(text.text, s => {
+                            RenameInputField.instance.Show(text.text, s => {
                                 instance.input = false;
                                 if(s.Trim().IsNullOrEmpty() || s == text.text) return;
                                 s = Path.GetInvalidPathChars().Aggregate(s, (cur, c) => cur.Replace(c.ToString(), "_"));
