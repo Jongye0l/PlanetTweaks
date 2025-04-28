@@ -59,17 +59,18 @@ public static class Patch {
                    controller.camy.zoomSize = 0.5f;
                    controller.camy.isPulsingOnHit = false;
                    new GameObject().AddComponent<ImageChangePage>();
-                   if(!Main.settings.thirdPlanet) return;
-                   planetarySystem.SetNumPlanets(3);
                    scrFloor floor = PlanetTweaksFloorController.instance.planetFloor;
-                   floor.numPlanets = 3;
-                   planetarySystem.planetRed.currfloor = floor;
-                   planetarySystem.planetBlue.currfloor = floor;
-                   planetarySystem.planetGreen.currfloor = floor;
-                   FieldInfo field = typeof(scrPlanet).Field("endingTween");
-                   field.SetValue(planetarySystem.planetRed, 1);
-                   field.SetValue(planetarySystem.planetBlue, 1);
-                   field.SetValue(planetarySystem.planetGreen, 1);
+                   if(Main.settings.thirdPlanet) {
+                       planetarySystem.SetNumPlanets(3);
+                       floor.numPlanets = 3;
+                       planetarySystem.planetRed.currfloor = floor;
+                       planetarySystem.planetBlue.currfloor = floor;
+                       planetarySystem.planetGreen.currfloor = floor;
+                       FieldInfo field = typeof(scrPlanet).Field("endingTween");
+                       field.SetValue(planetarySystem.planetRed, 1);
+                       field.SetValue(planetarySystem.planetBlue, 1);
+                       field.SetValue(planetarySystem.planetGreen, 1);
+                   }
                    planetarySystem.chosenPlanet.transform.LocalMoveXY(-15, -3);
                    planetarySystem.chosenPlanet.transform.position = new Vector3(-15, -3);
                    controller.camy.ViewObjectInstant(planetarySystem.chosenPlanet.transform);
