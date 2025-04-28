@@ -1,4 +1,4 @@
-﻿using JALib.Tools;
+﻿using System.Threading.Tasks;
 using UnityEngine;
 
 namespace PlanetTweaks.Components;
@@ -12,7 +12,7 @@ public class RendererController : MonoBehaviour {
     public SpriteRenderer renderer;
 
     private void Awake() {
-        scrPlanet planet = this.planet = GetComponentInParent<scrPlanet>();
+        planet = GetComponentInParent<scrPlanet>();
         SpriteRenderer renderer = this.renderer = gameObject.AddComponent<SpriteRenderer>();
         PlanetRenderer planetRenderer = this.planetRenderer = planet.planetRenderer;
         renderer.sortingOrder = planetRenderer.GetComponent<SpriteRenderer>().sortingOrder + 1;
@@ -31,13 +31,14 @@ public class RendererController : MonoBehaviour {
     }
 
     private void SetupStatic() {
-        scrController controller = scrController.instance;
-        if(!controller) {
-            MainThread.Run(Main.instance, SetupStatic);
+        PlanetarySystem planetarySystem = scrController.instance?.planetarySystem;
+        scrPlanet planet = this.planet;
+        if(!planetarySystem || !planet) {
+            Task.Yield().GetAwaiter().OnCompleted(SetupStatic);
             return;
         }
-        if(planet == controller.planetRed) redController = this;
-        else if(planet == controller.planetBlue) blueController = this;
-        else if(planet == controller.planetGreen) thirdController = this;
+        if(planet == planetarySystem.planetRed) redController = this;
+        else if(planet == planetarySystem.planetBlue) blueController = this;
+        else if(planet == planetarySystem.planetGreen) thirdController = this;
     }
 }
