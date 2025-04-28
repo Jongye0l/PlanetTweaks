@@ -20,19 +20,22 @@ public static class Sprites {
     public static SpriteRenderer GetOrAddRenderer(this scrPlanet planet) {
         if(!planet) return null;
         scrController controller = scrController.instance;
-        SpriteRenderer renderer = planet == controller.planetRed   ? RendererController.redController?.renderer :
-                                  planet == controller.planetBlue  ? RendererController.blueController?.renderer :
-                                  planet == controller.planetGreen ? RendererController.thirdController?.renderer :
+        SpriteRenderer renderer = planet == controller?.planetRed   ? RendererController.redController?.renderer :
+                                  planet == controller?.planetBlue  ? RendererController.blueController?.renderer :
+                                  planet == controller?.planetGreen ? RendererController.thirdController?.renderer :
                                                                      planet.transform.Find("PlanetTweaksRenderer")?.GetComponent<SpriteRenderer>();
-        if(!renderer) {
-            renderer = new GameObject("PlanetTweaksRenderer") {
-                transform = {
-                    parent = planet.transform,
-                    position = planet.transform.position
-                }
-            }.AddComponent<RendererController>().renderer;
-            Apply(renderer, planet.isRed ? RedSprite : !planet.isExtra ? BlueSprite : ThirdSprite);
-        }
+        renderer ??= planet.AddRenderer();
+        return renderer;
+    }
+
+    public static SpriteRenderer AddRenderer(this scrPlanet planet) {
+        SpriteRenderer renderer = new GameObject("PlanetTweaksRenderer") {
+            transform = {
+                parent = planet.transform,
+                position = planet.transform.position
+            }
+        }.AddComponent<RendererController>().renderer;
+        Apply(renderer, planet.isRed ? RedSprite : !planet.isExtra ? BlueSprite : ThirdSprite);
         return renderer;
     }
 

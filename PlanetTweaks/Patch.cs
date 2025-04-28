@@ -153,7 +153,7 @@ public static class Patch {
     [JAPatch(typeof(scrPlanet), nameof(Awake), PatchType.Postfix, false)]
     public static void Awake(scrPlanet __instance) {
         if(__instance.dummyPlanets || __instance.planetRenderer.objectDecoration || __instance.transform.Find("PlanetTweaksRenderer")) return;
-        SpriteRenderer renderer = __instance.GetOrAddRenderer();
+        SpriteRenderer renderer = __instance.AddRenderer();
         if(__instance.isRed) {
             renderer.transform.localScale = new Vector3(Main.settings.redSize, Main.settings.redSize);
             if(Main.settings.redColor) renderer.color = ColorUtils.GetRealColor(true);
