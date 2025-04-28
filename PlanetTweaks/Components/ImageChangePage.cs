@@ -122,12 +122,12 @@ public class ImageChangePage : MonoBehaviour {
                     events.Add(new Rect(79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0), 112 + j * 238 + (j > 1 ? -1 : 0), 164, 164), new ButtonEvent(
                         delegate {
                             scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
-                            floor.transform.DOKill(false);
+                            floor.transform.DOKill();
                             floor.transform.DOScale(new Vector3(0.9f, 0.9f), 0.5f);
                         },
                         delegate {
                             scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
-                            floor.transform.DOKill(false);
+                            floor.transform.DOKill();
                             floor.transform.DOScale(new Vector3(0.8f, 0.8f), 0.5f);
                         },
                         delegate {
@@ -210,7 +210,7 @@ public class ImageChangePage : MonoBehaviour {
                         delegate {
                             scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
                             TextMesh text = floor.GetName();
-                            text.DOKill(false);
+                            text.DOKill();
                             DOTween.To(() => text.color, c => text.color = c, Color.white, 0.5f).SetTarget(text);
                         },
                         delegate {

@@ -26,7 +26,7 @@ public static class GifUtils {
     }
 
     private static Sprite ToSprite(Image image) {
-        MemoryStream stream = new MemoryStream();
+        MemoryStream stream = new();
         image.Save(stream, ImageFormat.Png);
         return stream.GetBuffer().ToSprite();
     }

@@ -19,17 +19,19 @@ public static class Sprites {
 
     public static SpriteRenderer GetOrAddRenderer(this scrPlanet planet) {
         if(!planet) return null;
-        SpriteRenderer renderer = planet.transform.Find("PlanetTweaksRenderer")?.GetComponent<SpriteRenderer>();
+        scrController controller = scrController.instance;
+        SpriteRenderer renderer = planet == controller.planetRed   ? RendererController.redController?.renderer :
+                                  planet == controller.planetBlue  ? RendererController.blueController?.renderer :
+                                  planet == controller.planetGreen ? RendererController.thirdController?.renderer :
+                                                                     planet.transform.Find("PlanetTweaksRenderer")?.GetComponent<SpriteRenderer>();
         if(!renderer) {
-            GameObject obj = new("PlanetTweaksRenderer");
-            obj.AddComponent<RendererController>();
-            renderer = obj.AddComponent<SpriteRenderer>();
-            renderer.sortingOrder = planet.planetRenderer.GetComponent<SpriteRenderer>().sortingOrder + 1;
-            renderer.sortingLayerID = planet.planetRenderer.faceDetails.sortingLayerID;
-            renderer.sortingLayerName = planet.planetRenderer.faceDetails.sortingLayerName;
-            renderer.transform.SetParent(planet.transform);
-            renderer.transform.position = planet.transform.position;
-            Apply(renderer, planet.isRed ? RedSprite : (!planet.isExtra ? BlueSprite : ThirdSprite));
+            renderer = new GameObject("PlanetTweaksRenderer") {
+                transform = {
+                    parent = planet.transform,
+                    position = planet.transform.position
+                }
+            }.AddComponent<RendererController>().renderer;
+            Apply(renderer, planet.isRed ? RedSprite : !planet.isExtra ? BlueSprite : ThirdSprite);
         }
         return renderer;
     }
@@ -66,7 +68,7 @@ public static class Sprites {
     private static object thirdPreview;
 
     public static object ThirdPreview {
-        get { return thirdPreview; }
+        get => thirdPreview;
 
         set {
             thirdPreview = value;
@@ -223,7 +225,9 @@ public static class Sprites {
         foreach(FileInfo file in dir.GetFiles()) {
             try {
                 Add(Path.Combine(dir.FullName, file.Name));
-            } catch (Exception) { }
+            } catch (Exception) {
+                // ignored
+            }
         }
     }
 
@@ -231,15 +235,12 @@ public static class Sprites {
         if(!File.Exists(fileName))
             throw new ArgumentException("file doesn't exists!");
         string name = new FileInfo(fileName).Name;
-        name = name.Substring(0, name.LastIndexOf('.'));
+        name = name[..name.LastIndexOf('.')];
         string first = name;
-        for(int i = 1; sprites.ContainsKey(name); i++)
-            name = first + i;
-        if(fileName.EndsWith(".gif")) {
-            sprites.Add(name, new GifImage(fileName));
-        } else if(fileName.EndsWith(".gifmeta")) {
-            sprites.Add(name, GifImage.Load(fileName));
-        } else {
+        for(int i = 1; sprites.ContainsKey(name); i++) name = first + i;
+        if(fileName.EndsWith(".gif")) sprites.Add(name, new GifImage(fileName));
+        else if(fileName.EndsWith(".gifmeta")) sprites.Add(name, GifImage.Load(fileName));
+        else {
             Sprite sprite = File.ReadAllBytes(fileName).ToSprite();
             sprite.name = name;
             sprites.Add(name, sprite);
@@ -247,21 +248,16 @@ public static class Sprites {
     }
 
     public static bool Remove(string name) {
-        if(!sprites.ContainsKey(name))
-            return false;
-        if(Main.settings.redSelected == name)
-            RedSelected = -1;
-        if(Main.settings.blueSelected == name)
-            BlueSelected = -1;
-        if(Main.settings.thirdSelected == name)
-            ThirdSelected = -1;
+        if(!sprites.ContainsKey(name)) return false;
+        if(Main.settings.redSelected == name) RedSelected = -1;
+        if(Main.settings.blueSelected == name) BlueSelected = -1;
+        if(Main.settings.thirdSelected == name) ThirdSelected = -1;
         sprites.Remove(name);
         return true;
     }
 
     public static bool Remove(int index) {
-        if(index < 0 || index >= sprites.Count())
-            return false;
+        if(index < 0 || index >= sprites.Count) return false;
         return Remove(sprites.Keys.ElementAt(index));
     }
 
@@ -287,16 +283,14 @@ public static class Sprites {
     }
 
     public static DirectoryInfo CreateIfNotExists(this string dirName) {
-        if(!Directory.Exists(dirName))
-            return Directory.CreateDirectory(dirName);
-        return new DirectoryInfo(dirName);
+        return !Directory.Exists(dirName) ? Directory.CreateDirectory(dirName) : new DirectoryInfo(dirName);
     }
 
     public static Sprite ToSprite(this byte[] data) {
-        Texture2D texture = new Texture2D(0, 0);
+        Texture2D texture = new(0, 0);
         if(texture.LoadImage(data)) {
             texture = texture.ResizeFix();
-            Rect rect = new Rect(0, 0, texture.width, texture.height);
+            Rect rect = new(0, 0, texture.width, texture.height);
             return Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
         }
         return null;

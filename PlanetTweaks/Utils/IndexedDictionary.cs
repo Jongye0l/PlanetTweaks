@@ -80,9 +80,7 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
         return keys.Contains(key);
     }
 
-    public void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex) {
-        throw new NotImplementedException();
-    }
+    public void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex) => throw new NotImplementedException();
 
     public IEnumerator<KeyValuePair<K, V>> GetEnumerator() {
         int i = 0;

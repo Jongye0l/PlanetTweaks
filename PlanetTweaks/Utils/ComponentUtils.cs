@@ -3,10 +3,6 @@
 namespace PlanetTweaks.Utils;
 
 public static class ComponentUtils {
-    public static scrFloor GetFloor(this Component component) {
-        return component.transform.parent.GetChild(0).GetComponent<scrFloor>();
-    }
-
     public static scrFloor GetFloor(this Transform transform) {
         return transform.GetChild(0).GetComponent<scrFloor>();
     }
