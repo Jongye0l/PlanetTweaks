@@ -43,13 +43,13 @@ public class Main : JAMod {
     }
 
     protected override void OnDisable() {
+        PlanetTweaksPlanetController controller = PlanetTweaksPlanetController.instance;
+        if(controller) foreach(SpriteRenderer renderer in controller.spriteDictionary.Values) Object.Destroy(renderer.gameObject);
+        Sprites.Dispose();
         if(bundle) {
             bundle.Unload(true);
             bundle = null;
         }
-        scrController controller = scrController.instance;
-        if(!controller) return;
-        foreach(scrPlanet planet in controller.planetarySystem.allPlanets) Object.Destroy(planet.GetOrAddRenderer().gameObject);
     }
 
     protected override void OnGUI() {

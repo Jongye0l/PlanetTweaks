@@ -173,16 +173,12 @@ public static class Sprites {
 
     public static void Apply(SpriteRenderer renderer, object v) {
         renderer.enabled = true;
-        UnityEngine.Object.DestroyImmediate(renderer.GetComponent<GifRenderer>());
-        if(v is Sprite spr) {
-            renderer.sprite = spr;
-        } else if(v is GifImage gif) {
+        if(v is GifImage gif) {
             renderer.sprite = gif.Thumbnail;
-            GifRenderer gifRenderer = renderer.gameObject.AddComponent<GifRenderer>();
-            gifRenderer.Image = gif;
-            gifRenderer.Renderer = renderer;
-        } else if(v == null) {
-            renderer.sprite = null;
+            renderer.gameObject.GetOrAddComponent<GifRenderer>().SetData(gif, renderer);
+        } else {
+            UnityEngine.Object.DestroyImmediate(renderer.GetComponent<GifRenderer>());
+            renderer.sprite = v as Sprite;
         }
     }
 

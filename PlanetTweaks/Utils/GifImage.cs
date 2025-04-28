@@ -10,8 +10,8 @@ using UnityEngine;
 namespace PlanetTweaks.Utils;
 
 public class GifImage {
-    public int Length { get; private set; }
-    public GifFrame[] Frames { get; private set; }
+    public int Length;
+    public GifFrame[] Frames;
     public Sprite Thumbnail => Frames.Length == 0 ? null : Frames[0].Sprite;
 
     public GifImage(string gif) {
@@ -35,9 +35,9 @@ public class GifImage {
             }) ?? Frames.Last()).Sprite;
 
     public class GifFrame {
-        public int Index { get; private set; }
-        public int Length { get; private set; }
-        public Sprite Sprite { get; private set; }
+        public int Index;
+        public int Length;
+        public Sprite Sprite;
 
         public GifFrame(int index, int length, Sprite sprite) {
             Index = index;
@@ -46,10 +46,11 @@ public class GifImage {
         }
 
         public JObject ToJson(string path) {
-            JObject obj = new JObject();
-            obj["index"] = Index;
-            obj["length"] = Length;
-            obj["path"] = Path.Combine(path, Index + ".png");
+            JObject obj = new() {
+                ["index"] = Index,
+                ["length"] = Length,
+                ["path"] = Path.Combine(path, Index + ".png")
+            };
             return obj;
         }
     }
