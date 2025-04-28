@@ -504,6 +504,7 @@
     <ItemGroup>
         <Compile Include="Components\GifRenderer.cs" />
         <Compile Include="Components\ImageChangePage.cs" />
+        <Compile Include="Components\PlanetSettingFloor.cs" />
         <Compile Include="Components\PlanetTweakFloorController.cs" />
         <Compile Include="Components\RenameInputField.cs" />
         <Compile Include="Components\RendererController.cs" />
@@ -513,7 +514,6 @@
         <Compile Include="Settings.cs" />
         <Compile Include="Sprites.cs" />
         <Compile Include="Utils\ColorUtils.cs" />
-        <Compile Include="Utils\ComponentUtils.cs" />
         <Compile Include="Utils\FloorUtils.cs" />
         <Compile Include="Utils\GifImage.cs" />
         <Compile Include="Utils\GifUtils.cs" />

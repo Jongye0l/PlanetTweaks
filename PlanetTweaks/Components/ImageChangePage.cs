@@ -119,12 +119,12 @@ public class ImageChangePage : MonoBehaviour {
                 if(i == 5 && j == 3)
                     events.Add(new Rect(79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0), 112 + j * 238 + (j > 1 ? -1 : 0), 164, 164), new ButtonEvent(
                         delegate {
-                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
+                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI].floor;
                             floor.transform.DOKill();
                             floor.transform.DOScale(new Vector3(0.9f, 0.9f), 0.5f);
                         },
                         delegate {
-                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
+                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI].floor;
                             floor.transform.DOKill();
                             floor.transform.DOScale(new Vector3(0.8f, 0.8f), 0.5f);
                         },
@@ -141,30 +141,32 @@ public class ImageChangePage : MonoBehaviour {
                 else {
                     events.Add(new Rect(79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0), 112 + j * 238 + (j > 1 ? -1 : 0), 164, 164), new ButtonEvent(
                         delegate {
-                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
-                            if(!floor.GetIcon().sprite) return;
+                            PlanetSettingFloor settingFloor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
+                            scrFloor floor = settingFloor.floor;
+                            SpriteRenderer sprite = settingFloor.icon;
+                            if(!sprite.sprite) return;
                             floor.transform.DOKill();
                             floor.transform.DOScale(new Vector3(1, 1), 0.5f).OnComplete(delegate {
                                 int index = instance.page * 23 + copyJ * 6 + copyI;
                                 if((scrController.instance.planetarySystem.chosenPlanet.isRed ? Sprites.RedSelected :
                                     !scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == index)
                                     return;
-                                floor.GetPreview().gameObject.SetActive(true);
+                                settingFloor.preview.gameObject.SetActive(true);
                                 object value = Sprites.sprites.ElementAt(index).Value;
                                 if(scrController.instance.planetarySystem.chosenPlanet.isRed) Sprites.RedPreview = value;
                                 else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra) Sprites.BluePreview = value;
                                 else Sprites.ThirdPreview = value;
                             }).SetAutoKill(false);
-                            SpriteRenderer sprite = floor.GetIcon();
                             sprite.transform.DOKill();
                             sprite.transform.DOScale(new Vector3(0.875f, 0.875f), 0.5f);
                         },
                         delegate {
-                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
+                            PlanetSettingFloor settingFloor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
+                            scrFloor floor = settingFloor.floor;
                             floor.transform.DOKill();
                             floor.transform.DOScale(new Vector3(0.8f, 0.8f), 0.5f);
-                            floor.GetPreview().gameObject.SetActive(false);
-                            SpriteRenderer sprite = floor.GetIcon();
+                            settingFloor.preview.gameObject.SetActive(false);
+                            SpriteRenderer sprite = settingFloor.icon;
                             sprite.transform.DOKill();
                             sprite.transform.DOScale(new Vector3(0.7f, 0.7f), 0.5f);
                             if(scrController.instance.planetarySystem.chosenPlanet.isRed) Sprites.RedPreview = null;
@@ -172,11 +174,12 @@ public class ImageChangePage : MonoBehaviour {
                             else Sprites.ThirdPreview = null;
                         },
                         delegate {
-                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
-                            if(!floor.GetIcon().sprite) return;
+                            PlanetSettingFloor settingFloor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
+                            scrFloor floor = settingFloor.floor;
+                            SpriteRenderer sprite = settingFloor.icon;
+                            if(!sprite.sprite) return;
                             floor.transform.DOComplete();
-                            floor.GetPreview().gameObject.SetActive(false);
-                            SpriteRenderer sprite = floor.GetIcon();
+                            settingFloor.preview.gameObject.SetActive(false);
                             sprite.transform.DOComplete();
                             int index = instance.page * 23 + copyJ * 6 + copyI;
                             if(Input.GetMouseButtonUp(0))
@@ -200,20 +203,17 @@ public class ImageChangePage : MonoBehaviour {
 
                     events.Add(new Rect(79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0), 112 + j * 238 + (j > 1 ? -1 : 0) + 168, 164, 40), new ButtonEvent(
                         delegate {
-                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
-                            TextMesh text = floor.GetName();
+                            TextMesh text = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI].nameText;
                             text.DOKill();
                             DOTween.To(() => text.color, c => text.color = c, Color.yellow, 0.5f).SetTarget(text);
                         },
                         delegate {
-                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
-                            TextMesh text = floor.GetName();
+                            TextMesh text = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI].nameText;
                             text.DOKill();
                             DOTween.To(() => text.color, c => text.color = c, Color.white, 0.5f).SetTarget(text);
                         },
                         delegate {
-                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
-                            TextMesh text = floor.GetName();
+                            TextMesh text = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI].nameText;
                             int index = instance.page * 23 + copyJ * 6 + copyI;
                             if(index >= Sprites.sprites.Count) return;
                             instance.input = true;
@@ -237,24 +237,23 @@ public class ImageChangePage : MonoBehaviour {
     public static Color floorColor = new(0.78f, 0.78f, 0.886f);
 
     public void UpdateFloorIcons() {
-        GameObject images = GameObject.Find("PlanetTweaks_Images");
-        for(int i = 0; i < images.transform.childCount - 1; i++) {
-            Transform obj = images.transform.GetChild(i);
-            Sprites.Apply(obj.GetIcon(), null);
-            obj.GetName().text = null;
-            obj.GetFloor().SetTileColor((scrController.instance.planetarySystem.chosenPlanet.isRed ? Sprites.RedSelected :
-                                         !scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == i + page * 23 ? Color.yellow : floorColor);
+        PlanetSettingFloor[] settingFloors = PlanetTweakFloorController.instance.floors;
+        for(int i = 0; i < settingFloors.Length - 1; i++) {
+            PlanetSettingFloor cur = PlanetTweakFloorController.instance.floors[i];
+            Sprites.Apply(cur.icon, null);
+            cur.nameText.text = null;
+            cur.floor.SetTileColor((scrController.instance.planetarySystem.chosenPlanet.isRed ? Sprites.RedSelected :
+                                    !scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == i + page * 23 ? Color.yellow : floorColor);
         }
-        for(int i = 0; i < images.transform.childCount - 1; i++) {
+        for(int i = 0; i < settingFloors.Length - 1; i++) {
             if(i + page * 23 >= Sprites.sprites.Count) break;
             KeyValuePair<string, object> pair = Sprites.sprites.ElementAt(i + page * 23);
-            Transform obj = images.transform.GetChild(i);
-            Sprites.Apply(obj.GetIcon(), pair.Value);
-            obj.GetName().text = pair.Key;
+            PlanetSettingFloor cur = PlanetTweakFloorController.instance.floors[i];
+            Sprites.Apply(cur.icon, pair.Value);
+            cur.nameText.text = pair.Key;
         }
         pageText.text = string.Format(Main.instance.Localization["ChangePage.Page"], page + 1);
-        leftPageBtn.sprite = page == 0 ? pageBtnDisabled :
-                             new Rect(18, 86, 43, 44).Contains(Event.current.mousePosition) ? pageBtnEntered : pageBtnNormal;
+        leftPageBtn.sprite = page == 0 ? pageBtnDisabled : new Rect(18, 86, 43, 44).Contains(Event.current.mousePosition) ? pageBtnEntered : pageBtnNormal;
     }
 
     public void ChangePage(int page) {
@@ -276,21 +275,23 @@ public class ImageChangePage : MonoBehaviour {
                                     });
                                     break;
                                 }
-                                floor = PlanetTweakFloorController.instance.floors[j * 6 + i];
+                                PlanetSettingFloor settingFloor = PlanetTweakFloorController.instance.floors[j * 6 + i];
+                                floor = settingFloor.floor;
                                 FloorRenderer fr2 = floor.floorRenderer;
                                 fr2.color = fr2.color.WithAlpha(0);
                                 fade = DOTween.To(() => fr2.color, c => fr2.color = c, fr2.color.WithAlpha(1), 0.5f);
-                                floor.GetName().gameObject.GetComponent<MeshRenderer>().material.DOFade(1, 0.5f);
-                                floor.GetIcon().material.DOFade(1, 0.5f);
+                                settingFloor.nameRenderer.material.DOFade(1, 0.5f);
+                                settingFloor.icon.material.DOFade(1, 0.5f);
                             }
                     });
                     break;
                 }
-                floor = PlanetTweakFloorController.instance.floors[j * 6 + i];
+                PlanetSettingFloor settingFloor = PlanetTweakFloorController.instance.floors[j * 6 + i];
+                floor = settingFloor.floor;
                 FloorRenderer fr = floor.floorRenderer;
                 fade = DOTween.To(() => fr.color, c => fr.color = c, fr.color.WithAlpha(0), 0.5f);
-                floor.GetName().gameObject.GetComponent<MeshRenderer>().material.DOFade(0, 0.5f);
-                floor.GetIcon().material.DOFade(0, 0.5f);
+                settingFloor.nameRenderer.material.DOFade(0, 0.5f);
+                settingFloor.icon.material.DOFade(0, 0.5f);
             }
     }
 

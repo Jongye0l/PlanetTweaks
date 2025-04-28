@@ -75,8 +75,7 @@ public static class Patch {
                    controller.camy.ViewVectorInstant(new Vector2(-18, -3.5f));
                    controller.camy.isMoveTweening = false;
                    scrUIController.instance.WipeFromBlack();
-                   scrFloor component = floor.GetComponent<scrFloor>();
-                   planetarySystem.planetList.ForEach(p => p.currfloor = component);
+                   planetarySystem.planetList.ForEach(p => p.currfloor = floor);
                });
            }, GameObject.Find("outer ring").transform)) return;
         PlanetTweakFloorController controller = new GameObject("PlanetTweaksFloorController").AddComponent<PlanetTweakFloorController>();
@@ -101,7 +100,8 @@ public static class Patch {
                         parent = images.transform
                     }
                 };
-                scrFloor floor = controller.floors[i * 6 + j] = FloorUtils.AddFloor(-21.7f + j * 0.9f, -1.9f - i * 1.1f, obj.transform);
+                PlanetSettingFloor settingFloor = controller.floors[i * 6 + j] = obj.AddComponent<PlanetSettingFloor>();
+                scrFloor floor = settingFloor.floor = FloorUtils.AddFloor(-21.7f + j * 0.9f, -1.9f - i * 1.1f, obj.transform);
                 floor.transform.ScaleXY(0.8f, 0.8f);
                 floor.dontChangeMySprite = true;
                 if(j == 5 && i == 3) {
@@ -116,9 +116,9 @@ public static class Patch {
                     floor.floorRenderer.renderer.sortingLayerName = "Default";
                 }
 
-                TextMesh textMesh = new GameObject().AddComponent<TextMesh>();
+                TextMesh textMesh = settingFloor.nameText = new GameObject().AddComponent<TextMesh>();
                 textMesh.transform.parent = obj.transform;
-                textMesh.gameObject.GetOrAddComponent<MeshRenderer>().sortingOrder = 0;
+                (settingFloor.nameRenderer = textMesh.gameObject.GetOrAddComponent<MeshRenderer>()).sortingOrder = 0;
                 textMesh.SetLocalizedFont();
                 textMesh.fontSize = 100;
                 if(j == 5 && i == 3) {
@@ -131,7 +131,7 @@ public static class Patch {
                 textMesh.transform.position = new Vector3(floor.x - 0.35f, floor.y - 0.38f);
                 textMesh.transform.ScaleXY(0.015f, 0.015f);
 
-                textMesh = new GameObject().AddComponent<TextMesh>();
+                textMesh = settingFloor.preview = new GameObject().AddComponent<TextMesh>();
                 textMesh.transform.parent = obj.transform;
                 textMesh.gameObject.GetOrAddComponent<MeshRenderer>().sortingOrder = 3;
                 textMesh.SetLocalizedFont();
@@ -142,15 +142,15 @@ public static class Patch {
                 textMesh.transform.ScaleXY(0.018f, 0.018f);
                 textMesh.gameObject.SetActive(false);
 
-                SpriteRenderer icon = new GameObject().AddComponent<SpriteRenderer>();
+                SpriteRenderer icon = settingFloor.icon = new GameObject().AddComponent<SpriteRenderer>();
                 icon.transform.parent = obj.transform;
                 icon.sortingOrder = 2;
                 icon.transform.position = floor.transform.position;
                 icon.transform.ScaleXY(0.7f, 0.7f);
             }
-        foreach(scrFloor floor in PlanetTweakFloorController.instance.floors) {
-            floor.isLandable = false;
-            floor.gameObject.SetActive(false);
+        foreach(PlanetSettingFloor floor in PlanetTweakFloorController.instance.floors) {
+            floor.floor.isLandable = false;
+            floor.floor.gameObject.SetActive(false);
         }
         leftMovingFloor = FloorUtils.AddEventFloor(-3, -7, null);
         rightMovingFloor = FloorUtils.AddEventFloor(3, -7, null);
