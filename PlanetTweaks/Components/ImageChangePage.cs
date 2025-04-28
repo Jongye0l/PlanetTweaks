@@ -93,7 +93,7 @@ public class ImageChangePage : MonoBehaviour {
                 floor.transform.DOScale(new Vector3(1, 1), 0.5f);
             },
             delegate {
-                var floor = FloorUtils.GetFloor(-15, -3);
+                scrFloor floor = FloorUtils.GetFloor(-15, -3);
                 floor.transform.DOScale(new Vector3(0.8f, 0.8f), 0.5f);
             },
             delegate {

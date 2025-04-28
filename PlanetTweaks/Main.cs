@@ -157,9 +157,9 @@ public class Main : JAMod {
         Settings settings = Main.settings;
         XElement root = xDoc.Root;
         XElement sub = root.Element("redSize");
-        if(sub != null) settings.redSize = int.Parse(sub.Value);
+        if(sub != null) settings.redSize = float.Parse(sub.Value);
         sub = root.Element("blueSize");
-        if(sub != null) settings.blueSize = int.Parse(sub.Value);
+        if(sub != null) settings.blueSize = float.Parse(sub.Value);
         sub = root.Element("redColor");
         if(sub != null) settings.redColor = bool.Parse(sub.Value);
         sub = root.Element("blueColor");
@@ -169,7 +169,7 @@ public class Main : JAMod {
         sub = root.Element("shapedAngle");
         if(sub != null) settings.shapedAngle = int.Parse(sub.Value);
         sub = root.Element("thirdSize");
-        if(sub != null) settings.thirdSize = int.Parse(sub.Value);
+        if(sub != null) settings.thirdSize = float.Parse(sub.Value);
         sub = root.Element("thirdColor");
         if(sub != null) settings.thirdColor = bool.Parse(sub.Value);
         sub = root.Element("thirdPlanet");
