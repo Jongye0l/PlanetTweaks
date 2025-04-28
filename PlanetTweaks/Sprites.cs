@@ -19,13 +19,8 @@ public static class Sprites {
 
     public static SpriteRenderer GetOrAddRenderer(this scrPlanet planet) {
         if(!planet) return null;
-        scrController controller = scrController.instance;
-        SpriteRenderer renderer = planet == controller?.planetRed   ? RendererController.redController?.renderer :
-                                  planet == controller?.planetBlue  ? RendererController.blueController?.renderer :
-                                  planet == controller?.planetGreen ? RendererController.thirdController?.renderer :
-                                                                     planet.transform.Find("PlanetTweaksRenderer")?.GetComponent<SpriteRenderer>();
-        renderer ??= planet.AddRenderer();
-        return renderer;
+        SpriteRenderer renderer = planet.transform.Find("PlanetTweaksRenderer")?.GetComponent<SpriteRenderer>();
+        return renderer ?? planet.AddRenderer();
     }
 
     public static SpriteRenderer AddRenderer(this scrPlanet planet) {
@@ -49,7 +44,7 @@ public static class Sprites {
 
         set {
             redPreview = value;
-            scrPlanet planet = scrController.instance?.planetarySystem?.planetRed;
+            scrPlanet planet = scrController.instance?.planetRed;
             if(!planet) return;
             Apply(planet, value ?? RedSprite);
         }
@@ -62,7 +57,7 @@ public static class Sprites {
 
         set {
             bluePreview = value;
-            scrPlanet planet = scrController.instance?.planetarySystem?.planetBlue;
+            scrPlanet planet = scrController.instance?.planetBlue;
             if(!planet) return;
             Apply(planet, value ?? BlueSprite);
         }
@@ -75,7 +70,7 @@ public static class Sprites {
 
         set {
             thirdPreview = value;
-            scrPlanet planet = scrController.instance?.planetarySystem?.planetGreen;
+            scrPlanet planet = scrController.instance?.planetGreen;
             if(!planet) return;
             Apply(planet, value ?? ThirdSprite);
         }
@@ -96,7 +91,7 @@ public static class Sprites {
         }
 
         set {
-            var planet = scrController.instance?.planetarySystem?.planetRed;
+            var planet = scrController.instance?.planetRed;
 
             if(value < 0) {
                 Main.settings.redSelected = null;
@@ -125,7 +120,7 @@ public static class Sprites {
         }
 
         set {
-            scrPlanet planet = scrController.instance?.planetarySystem?.planetBlue;
+            scrPlanet planet = scrController.instance?.planetBlue;
             if(value < 0) {
                 Main.settings.blueSelected = null;
                 BlueSprite = null;
@@ -153,7 +148,7 @@ public static class Sprites {
         }
 
         set {
-            scrPlanet planet = scrController.instance?.planetarySystem?.planetGreen;
+            scrPlanet planet = scrController.instance?.planetGreen;
             if(value < 0) {
                 Main.settings.thirdSelected = null;
                 ThirdSprite = null;
@@ -273,7 +268,7 @@ public static class Sprites {
             = texture.width >= texture.height
                   ? (int) (FSize / texture.width * texture.height)
                   : Size;
-        Texture2D result = new Texture2D(targetWidth, targetHeight, texture.format, true);
+        Texture2D result = new(targetWidth, targetHeight, texture.format, true);
         Color[] pixels = result.GetPixels(0);
         float incX = 1.0f / targetWidth;
         float incY = 1.0f / targetHeight;

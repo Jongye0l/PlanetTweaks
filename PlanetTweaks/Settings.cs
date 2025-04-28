@@ -1,10 +1,7 @@
-﻿using System.IO;
-using System.Xml.Serialization;
-using JALib.Core;
+﻿using JALib.Core;
 using JALib.Core.Setting;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using UnityModManagerNet;
 
 namespace PlanetTweaks;
 
