@@ -50,25 +50,35 @@ public static class Patch {
 
     [JAPatch(typeof(scnLevelSelect), nameof(Start), PatchType.Postfix, false)]
     public static void Start() {
-        if(!FloorUtils.AddTeleportFloor(-2, -3, -15, -3, -18, -3.5f, false, action2: delegate {
-                scrController controller = scrController.instance;
-                PlanetarySystem planetarySystem = controller.planetarySystem;
-                planetarySystem.chosenPlanet = planetarySystem.planetRed;
-                controller.camy.zoomSize = 0.5f;
-                controller.camy.isPulsingOnHit = false;
-                new GameObject().AddComponent<ImageChangePage>();
-                if(!Main.settings.thirdPlanet) return;
-                planetarySystem.SetNumPlanets(3);
-                scrFloor floor = PlanetTweakFloorController.instance.planetFloor;
-                floor.numPlanets = 3;
-                planetarySystem.planetRed.currfloor = floor;
-                planetarySystem.planetBlue.currfloor = floor;
-                planetarySystem.planetGreen.currfloor = floor;
-                FieldInfo field = typeof(scrPlanet).Field("endingTween");
-                field.SetValue(planetarySystem.planetRed, 1);
-                field.SetValue(planetarySystem.planetBlue, 1);
-                field.SetValue(planetarySystem.planetGreen, 1);
-           }, parent: GameObject.Find("outer ring").transform)) return;
+        if(!FloorUtils.AddEventFloor(-2, -3, delegate {
+               scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, delegate {
+                   scrController controller = scrController.instance;
+                   PlanetarySystem planetarySystem = controller.planetarySystem;
+                   planetarySystem.chosenPlanet = planetarySystem.planetRed;
+                   controller.camy.zoomSize = 0.5f;
+                   controller.camy.isPulsingOnHit = false;
+                   new GameObject().AddComponent<ImageChangePage>();
+                   if(!Main.settings.thirdPlanet) return;
+                   planetarySystem.SetNumPlanets(3);
+                   scrFloor floor = PlanetTweakFloorController.instance.planetFloor;
+                   floor.numPlanets = 3;
+                   planetarySystem.planetRed.currfloor = floor;
+                   planetarySystem.planetBlue.currfloor = floor;
+                   planetarySystem.planetGreen.currfloor = floor;
+                   FieldInfo field = typeof(scrPlanet).Field("endingTween");
+                   field.SetValue(planetarySystem.planetRed, 1);
+                   field.SetValue(planetarySystem.planetBlue, 1);
+                   field.SetValue(planetarySystem.planetGreen, 1);
+                   planetarySystem.chosenPlanet.transform.LocalMoveXY(-15, -3);
+                   planetarySystem.chosenPlanet.transform.position = new Vector3(-15, -3);
+                   controller.camy.ViewObjectInstant(planetarySystem.chosenPlanet.transform);
+                   controller.camy.ViewVectorInstant(new Vector2(-18, -3.5f));
+                   controller.camy.isMoveTweening = false;
+                   scrUIController.instance.WipeFromBlack();
+                   scrFloor component = floor.GetComponent<scrFloor>();
+                   planetarySystem.planetList.ForEach(p => p.currfloor = component);
+               });
+           }, GameObject.Find("outer ring").transform)) return;
         PlanetTweakFloorController controller = new GameObject("PlanetTweaksFloorController").AddComponent<PlanetTweakFloorController>();
         if(!(controller.planetFloor = FloorUtils.AddEventFloor(-15, -3, null))) controller.planetFloor = FloorUtils.AddFloor(-15, -3);
         scrFloor exitFloor = controller.exitFloor = FloorUtils.AddFloor(-13.9f, -5.65f);

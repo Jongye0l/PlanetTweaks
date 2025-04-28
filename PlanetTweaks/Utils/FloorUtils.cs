@@ -8,7 +8,7 @@ namespace PlanetTweaks.Utils;
 
 public static class FloorUtils {
     public static scrFloor AddFloor(float x, float y, Transform parent = null) {
-        scrFloor obj = CreateFloor(parent);
+        scrFloor obj = Object.Instantiate(PrefabLibrary.instance.scnLevelSelectFloorPrefab, parent);
         obj.transform.position = new Vector3(x, y);
         return obj;
     }
@@ -24,30 +24,6 @@ public static class FloorUtils {
         return obj;
     }
 
-    public static scrFloor AddTeleportFloor(float x, float y, float targetX, float targetY, float cameraX, float cameraY, bool cameraMoving = true, PositionState state = PositionState.None, QuickAction action1 = null, QuickAction action2 = null, Transform parent = null) {
-        return AddEventFloor(x, y, delegate {
-            action1?.Invoke();
-            scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, delegate {
-                action2?.Invoke();
-                scrController controller = scrController.instance;
-                PlanetarySystem planetarySystem = controller.planetarySystem;
-                planetarySystem.chosenPlanet.transform.LocalMoveXY(targetX, targetY);
-                planetarySystem.chosenPlanet.transform.position = new Vector3(targetX, targetY);
-                controller.camy.ViewObjectInstant(planetarySystem.chosenPlanet.transform);
-                controller.camy.ViewVectorInstant(new Vector2(cameraX, cameraY));
-                controller.camy.isMoveTweening = cameraMoving;
-                controller.camy.positionState = state;
-                scrUIController.instance.WipeFromBlack();
-                scrFloor component = GetFloor(targetX, targetY).GetComponent<scrFloor>();
-                planetarySystem.planetList.ForEach(p => p.currfloor = component);
-            });
-        }, parent);
-    }
-
-    public static scrFloor CreateFloor(Transform parent = null) {
-        return Object.Instantiate(PrefabLibrary.instance.scnLevelSelectFloorPrefab, parent);
-    }
-
     public static scrFloor CreateGem(Transform parent = null) {
         scrFloor floor = Object.Instantiate(GameObject.Find("outer ring").transform.Find("ChangingRoomGem").Find("MovingGem"), parent).GetComponent<scrFloor>();
         Object.DestroyImmediate(floor.GetComponent<scrGem>());
@@ -60,10 +36,5 @@ public static class FloorUtils {
         Object.DestroyImmediate(gem);
         floor.gameObject.SetActive(true);
         return floor;
-    }
-
-    public static scrFloor GetFloor(float x, float y) {
-        Collider2D[] array = Physics2D.OverlapPointAll(new Vector2(x, y), 1 << LayerMask.NameToLayer("Floor"));
-        return array.Length == 0 ? null : array[0].gameObject.GetComponent<scrFloor>();
     }
 }
