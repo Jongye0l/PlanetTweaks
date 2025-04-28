@@ -59,7 +59,7 @@ public static class Patch {
                 new GameObject().AddComponent<ImageChangePage>();
                 if(!Main.settings.thirdPlanet) return;
                 planetarySystem.SetNumPlanets(3);
-                scrFloor floor = FloorUtils.GetFloor(-15, -3);
+                scrFloor floor = PlanetTweakFloorController.instance.planetFloor;
                 floor.numPlanets = 3;
                 planetarySystem.planetRed.currfloor = floor;
                 planetarySystem.planetBlue.currfloor = floor;
@@ -69,8 +69,9 @@ public static class Patch {
                 field.SetValue(planetarySystem.planetBlue, 1);
                 field.SetValue(planetarySystem.planetGreen, 1);
            }, parent: GameObject.Find("outer ring").transform)) return;
-        if(!FloorUtils.AddEventFloor(-15, -3, null)) FloorUtils.AddFloor(-15, -3);
-        scrFloor exitFloor = FloorUtils.AddFloor(-13.9f, -5.65f);
+        PlanetTweakFloorController controller = new GameObject("PlanetTweaksFloorController").AddComponent<PlanetTweakFloorController>();
+        if(!(controller.planetFloor = FloorUtils.AddEventFloor(-15, -3, null))) controller.planetFloor = FloorUtils.AddFloor(-15, -3);
+        scrFloor exitFloor = controller.exitFloor = FloorUtils.AddFloor(-13.9f, -5.65f);
         exitFloor.transform.ScaleXY(0.5f, 0.5f);
         exitFloor.isportal = true;
         exitFloor.floorRenderer.sortingOrder = 0;
@@ -90,7 +91,7 @@ public static class Patch {
                         parent = images.transform
                     }
                 };
-                scrFloor floor = FloorUtils.AddFloor(-21.7f + j * 0.9f, -1.9f - i * 1.1f, obj.transform);
+                scrFloor floor = controller.floors[i * 6 + j] = FloorUtils.AddFloor(-21.7f + j * 0.9f, -1.9f - i * 1.1f, obj.transform);
                 floor.transform.ScaleXY(0.8f, 0.8f);
                 floor.dontChangeMySprite = true;
                 if(j == 5 && i == 3) {
@@ -137,13 +138,10 @@ public static class Patch {
                 icon.transform.position = floor.transform.position;
                 icon.transform.ScaleXY(0.7f, 0.7f);
             }
-        for(int i = -18; i < -6; i++)
-            for(int j = -3; j < 4; j += 6) {
-                GameObject obj = FloorUtils.GetFloor(j, i)?.gameObject;
-                if(!obj) continue;
-                obj.GetComponent<scrFloor>().isLandable = false;
-                obj.SetActive(false);
-            }
+        foreach(scrFloor floor in PlanetTweakFloorController.instance.floors) {
+            floor.isLandable = false;
+            floor.gameObject.SetActive(false);
+        }
         leftMovingFloor = FloorUtils.AddEventFloor(-3, -7, null);
         rightMovingFloor = FloorUtils.AddEventFloor(3, -7, null);
         GameObject inputField = Object.Instantiate(Main.bundle.LoadAsset<GameObject>("InputField"));

@@ -206,18 +206,6 @@ public static class Sprites {
         return null;
     }
 
-    public static string ShowFolderBrowserDialog() {
-        DialogResult result = dirDialog.ShowDialog();
-        if(result == DialogResult.OK) {
-            try {
-                return dirDialog.SelectedPath;
-            } catch (Exception e) {
-                Main.instance.Log(e.StackTrace);
-            }
-        }
-        return null;
-    }
-
     public static void Load() {
         DirectoryInfo dir = GetPath().CreateIfNotExists();
         foreach(FileInfo file in dir.GetFiles()) {
@@ -272,9 +260,8 @@ public static class Sprites {
         Color[] pixels = result.GetPixels(0);
         float incX = 1.0f / targetWidth;
         float incY = 1.0f / targetHeight;
-        for(int pixel = 0; pixel < pixels.Length; pixel++) {
-            pixels[pixel] = texture.GetPixelBilinear(incX * ((float) pixel % targetWidth), incY * ((float) Mathf.Floor(pixel / targetWidth)));
-        }
+        for(int pixel = 0; pixel < pixels.Length; pixel++)
+            pixels[pixel] = texture.GetPixelBilinear(incX * (pixel % targetWidth), incY * Mathf.Floor((float) pixel / targetWidth));
         result.SetPixels(pixels, 0);
         result.Apply();
         return result;
@@ -286,12 +273,10 @@ public static class Sprites {
 
     public static Sprite ToSprite(this byte[] data) {
         Texture2D texture = new(0, 0);
-        if(texture.LoadImage(data)) {
-            texture = texture.ResizeFix();
-            Rect rect = new(0, 0, texture.width, texture.height);
-            return Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
-        }
-        return null;
+        if(!texture.LoadImage(data)) return null;
+        texture = texture.ResizeFix();
+        Rect rect = new(0, 0, texture.width, texture.height);
+        return Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
     }
 
     public static void Dispose() {

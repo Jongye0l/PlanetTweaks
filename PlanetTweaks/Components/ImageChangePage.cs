@@ -68,12 +68,12 @@ public class ImageChangePage : MonoBehaviour {
         // 메인메뉴로 나가기
         events.Add(new Rect(1920 - 400, 1080 - 150, 400, 150), new ButtonEvent(
             delegate {
-                scrFloor floor = FloorUtils.GetFloor(-13.9f, -5.65f);
+                scrFloor floor = PlanetTweakFloorController.instance.exitFloor;
                 floor.DOKill();
                 floor.transform.DOScale(new Vector3(0.55f, 0.55f), 0.5f);
             },
             delegate {
-                scrFloor floor = FloorUtils.GetFloor(-13.9f, -5.65f);
+                scrFloor floor = PlanetTweakFloorController.instance.exitFloor;
                 floor.DOKill();
                 floor.transform.DOScale(new Vector3(0.5f, 0.5f), 0.5f);
             },
@@ -89,12 +89,10 @@ public class ImageChangePage : MonoBehaviour {
         // 공 바꾸기
         events.Add(new Rect(1920 - 615, 1080 - 950, 600, 600), new ButtonEvent(
             delegate {
-                scrFloor floor = FloorUtils.GetFloor(-15, -3);
-                floor.transform.DOScale(new Vector3(1, 1), 0.5f);
+                PlanetTweakFloorController.instance.planetFloor.transform.DOScale(new Vector3(1, 1), 0.5f);
             },
             delegate {
-                scrFloor floor = FloorUtils.GetFloor(-15, -3);
-                floor.transform.DOScale(new Vector3(0.8f, 0.8f), 0.5f);
+                PlanetTweakFloorController.instance.planetFloor.transform.DOScale(new Vector3(0.8f, 0.8f), 0.5f);
             },
             delegate {
                 instance.changing = true;
@@ -121,12 +119,12 @@ public class ImageChangePage : MonoBehaviour {
                 if(i == 5 && j == 3)
                     events.Add(new Rect(79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0), 112 + j * 238 + (j > 1 ? -1 : 0), 164, 164), new ButtonEvent(
                         delegate {
-                            scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
+                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
                             floor.transform.DOKill();
                             floor.transform.DOScale(new Vector3(0.9f, 0.9f), 0.5f);
                         },
                         delegate {
-                            scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
+                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
                             floor.transform.DOKill();
                             floor.transform.DOScale(new Vector3(0.8f, 0.8f), 0.5f);
                         },
@@ -143,7 +141,7 @@ public class ImageChangePage : MonoBehaviour {
                 else {
                     events.Add(new Rect(79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0), 112 + j * 238 + (j > 1 ? -1 : 0), 164, 164), new ButtonEvent(
                         delegate {
-                            scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
+                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
                             if(!floor.GetIcon().sprite) return;
                             floor.transform.DOKill();
                             floor.transform.DOScale(new Vector3(1, 1), 0.5f).OnComplete(delegate {
@@ -162,7 +160,7 @@ public class ImageChangePage : MonoBehaviour {
                             sprite.transform.DOScale(new Vector3(0.875f, 0.875f), 0.5f);
                         },
                         delegate {
-                            scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
+                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
                             floor.transform.DOKill();
                             floor.transform.DOScale(new Vector3(0.8f, 0.8f), 0.5f);
                             floor.GetPreview().gameObject.SetActive(false);
@@ -174,7 +172,7 @@ public class ImageChangePage : MonoBehaviour {
                             else Sprites.ThirdPreview = null;
                         },
                         delegate {
-                            scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
+                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
                             if(!floor.GetIcon().sprite) return;
                             floor.transform.DOComplete();
                             floor.GetPreview().gameObject.SetActive(false);
@@ -202,19 +200,19 @@ public class ImageChangePage : MonoBehaviour {
 
                     events.Add(new Rect(79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0), 112 + j * 238 + (j > 1 ? -1 : 0) + 168, 164, 40), new ButtonEvent(
                         delegate {
-                            scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
+                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
                             TextMesh text = floor.GetName();
                             text.DOKill();
                             DOTween.To(() => text.color, c => text.color = c, Color.yellow, 0.5f).SetTarget(text);
                         },
                         delegate {
-                            scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
+                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
                             TextMesh text = floor.GetName();
                             text.DOKill();
                             DOTween.To(() => text.color, c => text.color = c, Color.white, 0.5f).SetTarget(text);
                         },
                         delegate {
-                            scrFloor floor = FloorUtils.GetFloor(-21.7f + copyI * 0.9f, -1.7f - copyJ * 1.1f);
+                            scrFloor floor = PlanetTweakFloorController.instance.floors[copyJ * 6 + copyI];
                             TextMesh text = floor.GetName();
                             int index = instance.page * 23 + copyJ * 6 + copyI;
                             if(index >= Sprites.sprites.Count) return;
@@ -278,7 +276,7 @@ public class ImageChangePage : MonoBehaviour {
                                     });
                                     break;
                                 }
-                                floor = FloorUtils.GetFloor(-21.7f + i * 0.9f, -1.7f - j * 1.1f);
+                                floor = PlanetTweakFloorController.instance.floors[j * 6 + i];
                                 FloorRenderer fr2 = floor.floorRenderer;
                                 fr2.color = fr2.color.WithAlpha(0);
                                 fade = DOTween.To(() => fr2.color, c => fr2.color = c, fr2.color.WithAlpha(1), 0.5f);
@@ -288,7 +286,7 @@ public class ImageChangePage : MonoBehaviour {
                     });
                     break;
                 }
-                floor = FloorUtils.GetFloor(-21.7f + i * 0.9f, -1.7f - j * 1.1f);
+                floor = PlanetTweakFloorController.instance.floors[j * 6 + i];
                 FloorRenderer fr = floor.floorRenderer;
                 fade = DOTween.To(() => fr.color, c => fr.color = c, fr.color.WithAlpha(0), 0.5f);
                 floor.GetName().gameObject.GetComponent<MeshRenderer>().material.DOFade(0, 0.5f);
