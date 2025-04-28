@@ -78,6 +78,7 @@ public static class Patch {
                    controller.camy.isMoveTweening = false;
                    scrUIController.instance.WipeFromBlack();
                    planetarySystem.planetList.ForEach(p => p.currfloor = floor);
+                   PlanetTweaksFloorController.instance.showing = true;
                });
            }, GameObject.Find("outer ring").transform))) return;
         PlanetTweaksFloorController controller = new GameObject("PlanetTweaksFloorController").AddComponent<PlanetTweaksFloorController>();

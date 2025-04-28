@@ -76,16 +76,7 @@ public class ImageChangePage : MonoBehaviour {
                 scrFloor floor = PlanetTweaksFloorController.instance.exitFloor;
                 floor.DOKill();
                 floor.transform.DOScale(new Vector3(0.5f, 0.5f), 0.5f);
-            },
-            delegate {
-                scrController.instance.SetValue("exitingToMainMenu", true);
-                Destroy();
-                GCS.sceneToLoad = GCNS.sceneLevelSelect;
-                scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, delegate {
-                    DOTween.KillAll();
-                    SceneManager.LoadScene("scnLoading");
-                });
-            }));
+            }, Exit));
         // 공 바꾸기
         events.Add(new Rect(1920 - 615, 1080 - 950, 600, 600), new ButtonEvent(
             delegate {
@@ -232,6 +223,16 @@ public class ImageChangePage : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public static void Exit() {
+        scrController.instance.SetValue("exitingToMainMenu", true);
+        Destroy();
+        GCS.sceneToLoad = GCNS.sceneLevelSelect;
+        scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, delegate {
+            DOTween.KillAll();
+            SceneManager.LoadScene("scnLoading");
+        });
     }
 
     public static Color floorColor = new(0.78f, 0.78f, 0.886f);

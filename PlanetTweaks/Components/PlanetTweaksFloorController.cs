@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace PlanetTweaks.Components;
 
@@ -9,9 +8,14 @@ public class PlanetTweaksFloorController : MonoBehaviour {
     public scrFloor planetFloor;
     public scrFloor exitFloor;
     public PlanetSettingFloor[] floors = new PlanetSettingFloor[24];
+    public bool showing;
 
     public static void Dispose() {
         if(!instance) return;
+        if(instance.showing) {
+            ImageChangePage.Exit();
+            return;
+        }
         Destroy(instance.eventFloor.gameObject);
         Destroy(instance.planetFloor.gameObject);
         Destroy(instance.exitFloor.gameObject);
@@ -26,5 +30,6 @@ public class PlanetTweaksFloorController : MonoBehaviour {
 
     private void OnDestroy() {
         floors = null;
+        instance = null;
     }
 }
