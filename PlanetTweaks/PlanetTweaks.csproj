@@ -505,7 +505,8 @@
         <Compile Include="Components\GifRenderer.cs" />
         <Compile Include="Components\ImageChangePage.cs" />
         <Compile Include="Components\PlanetSettingFloor.cs" />
-        <Compile Include="Components\PlanetTweakFloorController.cs" />
+        <Compile Include="Components\PlanetTweaksFloorController.cs" />
+        <Compile Include="Components\PlanetTweaksPlanetController.cs" />
         <Compile Include="Components\RenameInputField.cs" />
         <Compile Include="Components\RendererController.cs" />
         <Compile Include="Main.cs"/>

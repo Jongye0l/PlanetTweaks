@@ -19,7 +19,7 @@ public static class Sprites {
 
     public static SpriteRenderer GetOrAddRenderer(this scrPlanet planet) {
         if(!planet) return null;
-        SpriteRenderer renderer = planet.transform.Find("PlanetTweaksRenderer")?.GetComponent<SpriteRenderer>();
+        SpriteRenderer renderer = PlanetTweaksPlanetController.GetInstance().GetPlanetRenderer(planet);
         return renderer ?? planet.AddRenderer();
     }
 

@@ -60,7 +60,7 @@ public static class Patch {
                    new GameObject().AddComponent<ImageChangePage>();
                    if(!Main.settings.thirdPlanet) return;
                    planetarySystem.SetNumPlanets(3);
-                   scrFloor floor = PlanetTweakFloorController.instance.planetFloor;
+                   scrFloor floor = PlanetTweaksFloorController.instance.planetFloor;
                    floor.numPlanets = 3;
                    planetarySystem.planetRed.currfloor = floor;
                    planetarySystem.planetBlue.currfloor = floor;
@@ -78,7 +78,7 @@ public static class Patch {
                    planetarySystem.planetList.ForEach(p => p.currfloor = floor);
                });
            }, GameObject.Find("outer ring").transform)) return;
-        PlanetTweakFloorController controller = new GameObject("PlanetTweaksFloorController").AddComponent<PlanetTweakFloorController>();
+        PlanetTweaksFloorController controller = new GameObject("PlanetTweaksFloorController").AddComponent<PlanetTweaksFloorController>();
         if(!(controller.planetFloor = FloorUtils.AddEventFloor(-15, -3, null))) controller.planetFloor = FloorUtils.AddFloor(-15, -3);
         scrFloor exitFloor = controller.exitFloor = FloorUtils.AddFloor(-13.9f, -5.65f);
         exitFloor.transform.ScaleXY(0.5f, 0.5f);
@@ -148,7 +148,7 @@ public static class Patch {
                 icon.transform.position = floor.transform.position;
                 icon.transform.ScaleXY(0.7f, 0.7f);
             }
-        foreach(PlanetSettingFloor floor in PlanetTweakFloorController.instance.floors) {
+        foreach(PlanetSettingFloor floor in PlanetTweaksFloorController.instance.floors) {
             floor.floor.isLandable = false;
             floor.floor.gameObject.SetActive(false);
         }
