@@ -154,48 +154,52 @@ public class Main : JAMod {
     private static void SettingMigration() {
         string path = System.IO.Path.Combine(instance.Path, "Settings.xml");
         if(!File.Exists(path)) return;
-        XDocument xDoc = XDocument.Load(path);
-        Settings settings = Main.settings;
-        XElement root = xDoc.Root;
-        XElement sub = root.Element("redSize");
-        if(sub != null) settings.redSize = float.Parse(sub.Value);
-        sub = root.Element("blueSize");
-        if(sub != null) settings.blueSize = float.Parse(sub.Value);
-        sub = root.Element("redColor");
-        if(sub != null) settings.redColor = bool.Parse(sub.Value);
-        sub = root.Element("blueColor");
-        if(sub != null) settings.blueColor = bool.Parse(sub.Value);
-        sub = root.Element("shapedRotation");
-        if(sub != null) settings.shapedRotation = bool.Parse(sub.Value);
-        sub = root.Element("shapedAngle");
-        if(sub != null) settings.shapedAngle = int.Parse(sub.Value);
-        sub = root.Element("thirdSize");
-        if(sub != null) settings.thirdSize = float.Parse(sub.Value);
-        sub = root.Element("thirdColor");
-        if(sub != null) settings.thirdColor = bool.Parse(sub.Value);
-        sub = root.Element("thirdPlanet");
-        if(sub != null) settings.thirdPlanet = bool.Parse(sub.Value);
-        sub = root.Element("thirdColorType");
-        if(sub != null) settings.thirdColorType = int.Parse(sub.Value);
-        sub = root.Element("thirdColorRed");
-        if(sub != null) settings.thirdColorCustom.r = float.Parse(sub.Value) / 255;
-        sub = root.Element("thirdColorGreen");
-        if(sub != null) settings.thirdColorCustom.g = float.Parse(sub.Value) / 255;
-        sub = root.Element("thirdColorBlue");
-        if(sub != null) settings.thirdColorCustom.b = float.Parse(sub.Value) / 255;
-        instance.SaveSetting();
-        sub = root.Element("spriteDirectory");
         try {
-            File.Delete(path);
-        } catch (Exception) {
-            // ignored
-        }
-        if(sub == null || sub.Value == Sprites.GetPath()) return;
-        foreach(string file in Directory.GetFiles(sub.Value))
+            XDocument xDoc = XDocument.Load(path);
+            Settings settings = Main.settings;
+            XElement root = xDoc.Root;
+            XElement sub = root.Element("redSize");
+            if(sub != null) settings.redSize = float.Parse(sub.Value);
+            sub = root.Element("blueSize");
+            if(sub != null) settings.blueSize = float.Parse(sub.Value);
+            sub = root.Element("redColor");
+            if(sub != null) settings.redColor = bool.Parse(sub.Value);
+            sub = root.Element("blueColor");
+            if(sub != null) settings.blueColor = bool.Parse(sub.Value);
+            sub = root.Element("shapedRotation");
+            if(sub != null) settings.shapedRotation = bool.Parse(sub.Value);
+            sub = root.Element("shapedAngle");
+            if(sub != null) settings.shapedAngle = int.Parse(sub.Value);
+            sub = root.Element("thirdSize");
+            if(sub != null) settings.thirdSize = float.Parse(sub.Value);
+            sub = root.Element("thirdColor");
+            if(sub != null) settings.thirdColor = bool.Parse(sub.Value);
+            sub = root.Element("thirdPlanet");
+            if(sub != null) settings.thirdPlanet = bool.Parse(sub.Value);
+            sub = root.Element("thirdColorType");
+            if(sub != null) settings.thirdColorType = int.Parse(sub.Value);
+            sub = root.Element("thirdColorRed");
+            if(sub != null) settings.thirdColorCustom.r = float.Parse(sub.Value) / 255;
+            sub = root.Element("thirdColorGreen");
+            if(sub != null) settings.thirdColorCustom.g = float.Parse(sub.Value) / 255;
+            sub = root.Element("thirdColorBlue");
+            if(sub != null) settings.thirdColorCustom.b = float.Parse(sub.Value) / 255;
+            instance.SaveSetting();
+            sub = root.Element("spriteDirectory");
             try {
-                File.Copy(file, System.IO.Path.Combine(Sprites.GetPath(), System.IO.Path.GetFileName(file)), true);
+                File.Delete(path);
             } catch (Exception) {
                 // ignored
             }
+            if(sub == null || sub.Value == Sprites.GetPath()) return;
+            foreach(string file in Directory.GetFiles(sub.Value))
+                try {
+                    File.Copy(file, System.IO.Path.Combine(Sprites.GetPath(), System.IO.Path.GetFileName(file)), true);
+                } catch (Exception) {
+                    // ignored
+                }
+        } catch (Exception e) {
+            instance.LogReportException("Error while migration settings", e);
+        }
     }
 }
