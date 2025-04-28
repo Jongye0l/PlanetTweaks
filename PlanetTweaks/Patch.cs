@@ -151,10 +151,6 @@ public static class Patch {
                 icon.transform.position = floor.transform.position;
                 icon.transform.ScaleXY(0.7f, 0.7f);
             }
-        foreach(PlanetSettingFloor floor in PlanetTweaksFloorController.instance.floors) {
-            floor.floor.isLandable = false;
-            floor.floor.gameObject.SetActive(false);
-        }
         leftMovingFloor = FloorUtils.AddEventFloor(-3, -7, null);
         rightMovingFloor = FloorUtils.AddEventFloor(3, -7, null);
         GameObject inputField = Object.Instantiate(Main.bundle.LoadAsset<GameObject>("InputField"));
