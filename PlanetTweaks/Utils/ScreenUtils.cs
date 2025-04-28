@@ -3,14 +3,19 @@
 namespace PlanetTweaks.Utils;
 
 public static class ScreenUtils {
-    public static Rect Fix(this Rect rect, int width = 1920, int height = 1080) {
-        float xMultiply = (float) Screen.width / width;
-        float yMultiply = (float) Screen.height / height;
-        Rect newRect = new Rect(rect.x, rect.y, rect.width, rect.height);
-        newRect.x *= xMultiply;
-        newRect.y *= yMultiply;
-        newRect.width *= xMultiply;
-        newRect.height *= yMultiply;
-        return newRect;
+    private const int Width = 1920;
+    private const int Height = 1080;
+    public static Rect Fix(this Rect rect) {
+        if(Screen.width != Width) {
+            float xMultiply = (float) Screen.width / Width;
+            rect.x *= xMultiply;
+            rect.width *= xMultiply;
+        }
+        if(Screen.height != Height) {
+            float yMultiply = (float) Screen.height / Height;
+            rect.y *= yMultiply;
+            rect.height *= yMultiply;
+        }
+        return rect;
     }
 }
