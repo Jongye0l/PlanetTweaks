@@ -50,7 +50,8 @@ public static class Patch {
 
     [JAPatch(typeof(scnLevelSelect), nameof(Start), PatchType.Postfix, false)]
     public static void Start() {
-        if(!FloorUtils.AddEventFloor(-2, -3, delegate {
+        scrFloor eventFloor;
+        if(!(eventFloor = FloorUtils.AddEventFloor(-2, -3, delegate {
                scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, delegate {
                    scrController controller = scrController.instance;
                    PlanetarySystem planetarySystem = controller.planetarySystem;
@@ -77,8 +78,9 @@ public static class Patch {
                    scrUIController.instance.WipeFromBlack();
                    planetarySystem.planetList.ForEach(p => p.currfloor = floor);
                });
-           }, GameObject.Find("outer ring").transform)) return;
+           }, GameObject.Find("outer ring").transform))) return;
         PlanetTweaksFloorController controller = new GameObject("PlanetTweaksFloorController").AddComponent<PlanetTweaksFloorController>();
+        controller.eventFloor = eventFloor;
         if(!(controller.planetFloor = FloorUtils.AddEventFloor(-15, -3, null))) controller.planetFloor = FloorUtils.AddFloor(-15, -3);
         scrFloor exitFloor = controller.exitFloor = FloorUtils.AddFloor(-13.9f, -5.65f);
         exitFloor.transform.ScaleXY(0.5f, 0.5f);
