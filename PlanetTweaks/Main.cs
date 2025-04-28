@@ -40,6 +40,7 @@ public class Main : JAMod {
         Sprites.Init();
         if(!scrController.instance) return;
         foreach(scrPlanet planet in scrController.instance.planetarySystem.allPlanets) planet.GetOrAddRenderer();
+        if(scnLevelSelect.instance) Patch.Start();
     }
 
     protected override void OnDisable() {

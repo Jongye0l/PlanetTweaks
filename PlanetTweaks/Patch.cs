@@ -18,7 +18,7 @@ public static class Patch {
 
     [JAPatch(typeof(scrController), nameof(Update), PatchType.Postfix, false)]
     public static void Update() {
-        if(!scnLevelSelect.instance || !scrController.instance || !scrCamera.instance || !leftMovingFloor || !rightMovingFloor) return;
+        if(!scnLevelSelect.instance || !scrCamera.instance || !leftMovingFloor || !rightMovingFloor) return;
         float x = (float) Math.Round(scrController.instance.planetarySystem.chosenPlanet.transform.position.x);
         float y = (float) Math.Round(scrController.instance.planetarySystem.chosenPlanet.transform.position.y);
         if(x is not (3 or -3) || y is < -18 or > -7) return;
