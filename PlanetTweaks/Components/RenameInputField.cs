@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using JALib.Core;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -34,16 +35,16 @@ public class RenameInputField : MonoBehaviour {
         CanvasGroup.alpha = 0;
         CanvasGroup.interactable = false;
         CanvasGroup.blocksRaycasts = false;
-        Desc.text = RDString.language == SystemLanguage.Korean ? "이름 변경" : "Rename";
-        ((Text) InputField.placeholder).text = RDString.language == SystemLanguage.Korean ? "이름을 입력하세요..." : "Enter name...";
-        InputField.onEndEdit.AddListener(s => Hide());
+        JALocalization localization = Main.instance.Localization;
+        Desc.text = localization["InputField.Rename"];
+        ((Text) InputField.placeholder).text = localization["InputField.EnterName"];
+        InputField.onEndEdit.AddListener(_ => Hide());
         BackgroundButton.onClick.AddListener(Hide);
     }
 
     public void Show(string text, UnityAction<string> onHide) {
-        CanvasGroup.interactable = true;
-        CanvasGroup.blocksRaycasts = true;
-        this.DOKill(false);
+        CanvasGroup.interactable = CanvasGroup.blocksRaycasts = true;
+        this.DOKill();
         DOTween.To(() => CanvasGroup.alpha, a => CanvasGroup.alpha = a, 1, 0.5f).SetTarget(this);
         this.onHide?.Invoke(InputField.text);
         InputField.text = text;
