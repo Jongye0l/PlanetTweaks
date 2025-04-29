@@ -41,7 +41,7 @@ public class ImageChangePage : MonoBehaviour {
             pageBtnDisabled = Sprite.Create(texture, new Rect(0, 0, Size, Size), new Vector2(0.5f, 0.5f));
         }
         // 왼쪽 페이지 버튼
-        events.Add(new Rect(18, 129, 43, 44), new ButtonEvent(
+        events.Add((new Rect(18, 129, 43, 44), new ButtonEvent(
             delegate {
                 if(instance.page == 0) return;
                 instance.leftPageBtn.sprite = pageBtnEntered;
@@ -53,9 +53,9 @@ public class ImageChangePage : MonoBehaviour {
             delegate {
                 if(instance.page == 0) return;
                 instance.ChangePage(instance.page - 1);
-            }));
+            })));
         // 오른쪽 페이지 버튼
-        events.Add(new Rect(1232, 129, 43, 44), new ButtonEvent(
+        events.Add((new Rect(1232, 129, 43, 44), new ButtonEvent(
             delegate {
                 instance.rightPageBtn.sprite = pageBtnEntered;
             },
@@ -64,9 +64,9 @@ public class ImageChangePage : MonoBehaviour {
             },
             delegate {
                 instance.ChangePage(instance.page + 1);
-            }));
+            })));
         // 메인메뉴로 나가기
-        events.Add(new Rect(1920 - 400, 1080 - 150, 400, 150), new ButtonEvent(
+        events.Add((new Rect(1920 - 400, 1080 - 150, 400, 150), new ButtonEvent(
             delegate {
                 scrFloor floor = PlanetTweaksFloorController.instance.exitFloor;
                 floor.DOKill();
@@ -76,9 +76,9 @@ public class ImageChangePage : MonoBehaviour {
                 scrFloor floor = PlanetTweaksFloorController.instance.exitFloor;
                 floor.DOKill();
                 floor.transform.DOScale(new Vector3(0.5f, 0.5f), 0.5f);
-            }, Exit));
+            }, Exit)));
         // 공 바꾸기
-        events.Add(new Rect(1920 - 615, 1080 - 950, 600, 600), new ButtonEvent(
+        events.Add((new Rect(1920 - 615, 1080 - 950, 600, 600), new ButtonEvent(
             delegate {
                 PlanetTweaksFloorController.instance.planetFloor.transform.DOScale(new Vector3(1, 1), 0.5f);
             },
@@ -101,13 +101,13 @@ public class ImageChangePage : MonoBehaviour {
                     instance.UpdateFloorIcons();
                     scrUIController.instance.WipeFromBlack();
                 });
-            }));
+            })));
         // 이미지 타일들
         for(int i = 0; i < 6; i++) {
             for(int j = 0; j < 4; j++) {
                 int copyI = i;
                 int copyJ = j;
-                if(i == 5 && j == 3) events.Add(new Rect(1051, 825, 164, 164), new ButtonEvent(
+                if(i == 5 && j == 3) events.Add((new Rect(1051, 825, 164, 164), new ButtonEvent(
                     delegate {
                         scrFloor floor = PlanetTweaksFloorController.instance.floors[copyJ * 6 + copyI].floor;
                         floor.transform.DOKill();
@@ -127,11 +127,11 @@ public class ImageChangePage : MonoBehaviour {
                             Main.instance.Log("wrong file '" + file + "'!");
                             Main.instance.Log(e.StackTrace);
                         }
-                    }));
+                    })));
                 else {
                     float x = 79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0);
                     float y = 112 + j * 238 - (j > 1 ? 1 : 0);
-                    events.Add(new Rect(x, y, 164, 164), new ButtonEvent(
+                    events.Add((new Rect(x, y, 164, 164), new ButtonEvent(
                         delegate {
                             PlanetSettingFloor settingFloor = PlanetTweaksFloorController.instance.floors[copyJ * 6 + copyI];
                             scrFloor floor = settingFloor.floor;
@@ -191,8 +191,8 @@ public class ImageChangePage : MonoBehaviour {
                                 else Sprites.ThirdPreview = null;
                             } else return;
                             instance.UpdateFloorIcons();
-                        }));
-                    events.Add(new Rect(x, y, 164, 40), new ButtonEvent(
+                        })));
+                    events.Add((new Rect(x, y, 164, 40), new ButtonEvent(
                         delegate {
                             TextMesh text = PlanetTweaksFloorController.instance.floors[copyJ * 6 + copyI].nameText;
                             text.DOKill();
@@ -219,7 +219,7 @@ public class ImageChangePage : MonoBehaviour {
                                 text.text = s;
                                 Sprites.sprites.Replace(index, s, Sprites.sprites.ElementAt(index).Value);
                             });
-                        }));
+                        })));
                 }
             }
         }
@@ -345,7 +345,7 @@ public class ImageChangePage : MonoBehaviour {
         instance.UpdateFloorIcons();
     }
 
-    private static readonly Dictionary<Rect, ButtonEvent> events = new();
+    private static readonly List<(Rect, ButtonEvent)> events = [];
 
     public void OnGUI() {
         if(scrController.instance.paused) return;
@@ -359,10 +359,8 @@ public class ImageChangePage : MonoBehaviour {
 
     public void HandleButtonEvent() {
         Vector2 mouse = Event.current.mousePosition;
-        foreach(KeyValuePair<Rect, ButtonEvent> pair in events) {
+        foreach((Rect rect, ButtonEvent btnEvent) in events) {
             try {
-                Rect rect = pair.Key.Fix();
-                ButtonEvent btnEvent = pair.Value;
                 if(!btnEvent.Entered && rect.Contains(mouse)) {
                     if(!input && !changing && !UnityModManager.UI.Instance.Opened) {
                         btnEvent.Entered = true;
