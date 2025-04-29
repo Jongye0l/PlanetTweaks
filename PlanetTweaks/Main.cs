@@ -67,10 +67,10 @@ public class Main : JAMod {
         SettingGUI settingGUI = Main.settingGUI;
         PlanetarySystem planetarySystem = scrController.instance.planetarySystem;
         settingGUI.AddSettingSliderFloat(ref setting.redSize, 1, ref _cacheSettingStrings[0], localization["Setting.RedPlanetSize"], 0, 2, () => {
-            scrController.instance.planetarySystem.planetRed.GetOrAddRenderer().transform.localScale = new Vector2(settings.redSize, settings.redSize);
+            scrController.instance.planetarySystem.planetRed.GetOrAddRenderer().transform.localScale = new Vector3(settings.redSize, settings.redSize);
         });
         settingGUI.AddSettingSliderFloat(ref setting.blueSize, 1, ref _cacheSettingStrings[1], localization["Setting.BluePlanetSize"], 0, 2, () => {
-            scrController.instance.planetarySystem.planetBlue.GetOrAddRenderer().transform.localScale = new Vector2(settings.blueSize, settings.blueSize);
+            scrController.instance.planetarySystem.planetBlue.GetOrAddRenderer().transform.localScale = new Vector3(settings.blueSize, settings.blueSize);
         });
         if(GUILayout.Toggle(false, $"<color={ColorUtils.GetRealColor(true).Hex()}>{localization["Setting.RedColor"]}</color> " + localization["Setting.ColorBehind"] +
                                    $"  <color=grey>{(setting.redColor ? "O" : "Ⅹ")}</color>", labelStyle)) {
@@ -93,7 +93,7 @@ public class Main : JAMod {
                 SaveSetting();
             }
             settingGUI.AddSettingSliderFloat(ref setting.thirdSize, 1, ref _cacheSettingStrings[2], localization["Setting.ThirdPlanetSize"], 0, 2, () => {
-                scrController.instance.planetarySystem.planetGreen.GetOrAddRenderer().transform.localScale = new Vector2(settings.thirdSize, settings.thirdSize);
+                scrController.instance.planetarySystem.planetGreen.GetOrAddRenderer().transform.localScale = new Vector3(settings.thirdSize, settings.thirdSize);
             });
             if(GUILayout.Toggle(false, $"<color={ColorUtils.GetRealColor(false).Hex()}>{localization["Setting.ThirdColor"]}</color> " + localization["Setting.ColorBehind"] +
                                        $"  <color=grey>{(setting.thirdColor ? "O" : "Ⅹ")}</color>", labelStyle)) {
