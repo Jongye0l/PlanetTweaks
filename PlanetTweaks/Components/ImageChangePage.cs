@@ -374,15 +374,17 @@ public class ImageChangePage : MonoBehaviour {
                 }
                 if(!input && !changing && !UnityModManager.UI.Instance.Opened && GUI.Button(rect, "", GUIStyle.none))
                     btnEvent.OnClicked.Invoke();
-            } catch (Exception) { }
+            } catch (Exception) {
+                // ignored
+            }
         }
     }
 
     private class ButtonEvent {
-        public bool Entered { get; set; }
-        public QuickAction OnEntered { get; }
-        public QuickAction OnExited { get; }
-        public QuickAction OnClicked { get; }
+        public bool Entered;
+        public QuickAction OnEntered;
+        public QuickAction OnExited;
+        public QuickAction OnClicked;
 
         public ButtonEvent(QuickAction onEntered, QuickAction onExited, QuickAction onClicked) {
             Entered = false;
