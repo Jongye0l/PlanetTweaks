@@ -196,7 +196,7 @@ public static class Patch {
         renderer.color = Main.settings.thirdColor ? ColorUtils.GetThirdColor() : Color.white;
     }
 
-    [JAPatch(typeof(Persistence), nameof(SetPlayerColor), PatchType.Postfix, false)]
+    [JAPatch(typeof(Persistence), nameof(SetPlayerColor), PatchType.Postfix, false, TryingCatch = false)]
     public static void SetPlayerColor(bool red) {
         try {
             if(red && Main.settings.redColor)
