@@ -107,30 +107,31 @@ public class ImageChangePage : MonoBehaviour {
             for(int j = 0; j < 4; j++) {
                 int copyI = i;
                 int copyJ = j;
-                if(i == 5 && j == 3)
-                    events.Add(new Rect(79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0), 112 + j * 238 + (j > 1 ? -1 : 0), 164, 164), new ButtonEvent(
-                        delegate {
-                            scrFloor floor = PlanetTweaksFloorController.instance.floors[copyJ * 6 + copyI].floor;
-                            floor.transform.DOKill();
-                            floor.transform.DOScale(new Vector3(0.9f, 0.9f), 0.5f);
-                        },
-                        delegate {
-                            scrFloor floor = PlanetTweaksFloorController.instance.floors[copyJ * 6 + copyI].floor;
-                            floor.transform.DOKill();
-                            floor.transform.DOScale(new Vector3(0.8f, 0.8f), 0.5f);
-                        },
-                        delegate {
-                            string file = Sprites.ShowOpenFileDialog();
-                            try {
-                                Sprites.Add(file);
-                                instance.UpdateFloorIcons();
-                            } catch (Exception e) {
-                                Main.instance.Log("wrong file '" + file + "'!");
-                                Main.instance.Log(e.StackTrace);
-                            }
-                        }));
+                if(i == 5 && j == 3) events.Add(new Rect(1051, 825, 164, 164), new ButtonEvent(
+                    delegate {
+                        scrFloor floor = PlanetTweaksFloorController.instance.floors[copyJ * 6 + copyI].floor;
+                        floor.transform.DOKill();
+                        floor.transform.DOScale(new Vector3(0.9f, 0.9f), 0.5f);
+                    },
+                    delegate {
+                        scrFloor floor = PlanetTweaksFloorController.instance.floors[copyJ * 6 + copyI].floor;
+                        floor.transform.DOKill();
+                        floor.transform.DOScale(new Vector3(0.8f, 0.8f), 0.5f);
+                    },
+                    delegate {
+                        string file = Sprites.ShowOpenFileDialog();
+                        try {
+                            Sprites.Add(file);
+                            instance.UpdateFloorIcons();
+                        } catch (Exception e) {
+                            Main.instance.Log("wrong file '" + file + "'!");
+                            Main.instance.Log(e.StackTrace);
+                        }
+                    }));
                 else {
-                    events.Add(new Rect(79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0), 112 + j * 238 + (j > 1 ? -1 : 0), 164, 164), new ButtonEvent(
+                    float x = 79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0);
+                    float y = 112 + j * 238 - (j > 1 ? 1 : 0);
+                    events.Add(new Rect(x, y, 164, 164), new ButtonEvent(
                         delegate {
                             PlanetSettingFloor settingFloor = PlanetTweaksFloorController.instance.floors[copyJ * 6 + copyI];
                             scrFloor floor = settingFloor.floor;
@@ -191,8 +192,7 @@ public class ImageChangePage : MonoBehaviour {
                             } else return;
                             instance.UpdateFloorIcons();
                         }));
-
-                    events.Add(new Rect(79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0), 112 + j * 238 + (j > 1 ? -1 : 0) + 168, 164, 40), new ButtonEvent(
+                    events.Add(new Rect(x, y, 164, 40), new ButtonEvent(
                         delegate {
                             TextMesh text = PlanetTweaksFloorController.instance.floors[copyJ * 6 + copyI].nameText;
                             text.DOKill();
@@ -380,17 +380,10 @@ public class ImageChangePage : MonoBehaviour {
         }
     }
 
-    private class ButtonEvent {
+    private class ButtonEvent(QuickAction onEntered, QuickAction onExited, QuickAction onClicked) {
         public bool Entered;
-        public QuickAction OnEntered;
-        public QuickAction OnExited;
-        public QuickAction OnClicked;
-
-        public ButtonEvent(QuickAction onEntered, QuickAction onExited, QuickAction onClicked) {
-            Entered = false;
-            OnEntered = onEntered;
-            OnExited = onExited;
-            OnClicked = onClicked;
-        }
+        public QuickAction OnEntered = onEntered;
+        public QuickAction OnExited = onExited;
+        public QuickAction OnClicked = onClicked;
     }
 }
