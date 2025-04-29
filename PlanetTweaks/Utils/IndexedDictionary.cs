@@ -8,29 +8,29 @@ namespace PlanetTweaks.Utils;
 public class IndexedDictionary<K, V> : IDictionary<K, V> {
     public V this[K key] {
         get {
-            int index = keys.IndexOf(key);
-            return index == -1 ? default : values[index];
+            int index = Keys.IndexOf(key);
+            return index == -1 ? default : Values[index];
         }
         set {
-            int index = keys.IndexOf(key);
-            if(index != -1) values[index] = value;
+            int index = Keys.IndexOf(key);
+            if(index != -1) Values[index] = value;
         }
     }
 
-    public ICollection<K> Keys => keys;
-    public ICollection<V> Values => values;
+    ICollection<K> IDictionary<K, V>.Keys => Keys;
+    ICollection<V> IDictionary<K, V>.Values => Values;
 
-    private List<K> keys = [];
-    private List<V> values = [];
+    public List<K> Keys = [];
+    public List<V> Values = [];
 
-    public int Count => keys.Count;
+    public int Count => Keys.Count;
 
     public bool IsReadOnly => false;
 
     public void Add(K key, V value) {
         if(ContainsKey(key)) throw new ArgumentException("item already exists!");
-        keys.Add(key);
-        values.Add(value);
+        Keys.Add(key);
+        Values.Add(value);
     }
 
     public void Add(KeyValuePair<K, V> item) {
@@ -39,8 +39,8 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
 
     public void Insert(int index, K key, V value) {
         if(ContainsKey(key)) throw new ArgumentException("item already exists!");
-        keys.Insert(index, key);
-        values.Insert(index, value);
+        Keys.Insert(index, key);
+        Values.Insert(index, value);
     }
 
     public void Insert(int index, KeyValuePair<K, V> item) {
@@ -48,10 +48,10 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
     }
 
     public void Replace(int index, K key, V value) {
-        int i = keys.IndexOf(key);
+        int i = Keys.IndexOf(key);
         if(i != -1 && i != index) throw new ArgumentException("item already exists!");
-        keys[index] = key;
-        values[index] = value;
+        Keys[index] = key;
+        Values[index] = value;
     }
 
     public void Replace(int index, KeyValuePair<K, V> item) {
@@ -59,7 +59,7 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
     }
 
     public void Replace(K prevKey, K key, V value) {
-        int index = keys.IndexOf(prevKey);
+        int index = Keys.IndexOf(prevKey);
         if(index != -1) Replace(index, key, value);
     }
 
@@ -68,8 +68,8 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
     }
 
     public void Clear() {
-        keys.Clear();
-        values.Clear();
+        Keys.Clear();
+        Values.Clear();
     }
 
     public bool Contains(KeyValuePair<K, V> item) {
@@ -77,37 +77,37 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
     }
 
     public bool ContainsKey(K key) {
-        return keys.Contains(key);
+        return Keys.Contains(key);
     }
 
     public void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex) => throw new NotImplementedException();
 
     public IEnumerator<KeyValuePair<K, V>> GetEnumerator() {
         int i = 0;
-        return keys.Select(k => new KeyValuePair<K, V>(k, values[i++])).GetEnumerator();
+        return Keys.Select(k => new KeyValuePair<K, V>(k, Values[i++])).GetEnumerator();
     }
 
     public bool Remove(K key) {
-        int index = keys.IndexOf(key);
+        int index = Keys.IndexOf(key);
         if(index == -1) return false;
-        keys.RemoveAt(index);
-        values.RemoveAt(index);
+        Keys.RemoveAt(index);
+        Values.RemoveAt(index);
         return true;
     }
 
     public bool Remove(KeyValuePair<K, V> item) => Remove(item.Key);
 
     public bool TryGetValue(K key, out V value) {
-        int index = keys.IndexOf(key);
+        int index = Keys.IndexOf(key);
         if(index == -1) {
             value = default;
             return false;
         }
-        value = values[index];
+        value = Values[index];
         return true;
     }
 
-    public KeyValuePair<K, V> ElementAt(int index) => new KeyValuePair<K, V>(keys[index], values[index]);
+    public KeyValuePair<K, V> ElementAt(int index) => new(Keys[index], Values[index]);
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

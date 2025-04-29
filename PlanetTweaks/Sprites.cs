@@ -4,7 +4,6 @@ using PlanetTweaks.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using UnityEngine;
 
@@ -82,16 +81,14 @@ public static class Sprites {
 
     public static int RedSelected {
         get {
-            if(Main.settings.redSelected == null)
-                return -1;
-            if(sprites.ContainsKey(Main.settings.redSelected))
-                return sprites.Keys.ToList().IndexOf(Main.settings.redSelected);
+            if(Main.settings.redSelected == null) return -1;
+            if(sprites.ContainsKey(Main.settings.redSelected)) return sprites.Keys.IndexOf(Main.settings.redSelected);
             Main.settings.redSelected = null;
             return -1;
         }
 
         set {
-            var planet = scrController.instance?.planetRed;
+            scrPlanet planet = scrController.instance?.planetRed;
 
             if(value < 0) {
                 Main.settings.redSelected = null;
@@ -111,10 +108,8 @@ public static class Sprites {
 
     public static int BlueSelected {
         get {
-            if(Main.settings.blueSelected == null)
-                return -1;
-            if(sprites.ContainsKey(Main.settings.blueSelected))
-                return sprites.Keys.ToList().IndexOf(Main.settings.blueSelected);
+            if(Main.settings.blueSelected == null) return -1;
+            if(sprites.ContainsKey(Main.settings.blueSelected)) return sprites.Keys.IndexOf(Main.settings.blueSelected);
             Main.settings.blueSelected = null;
             return -1;
         }
@@ -139,10 +134,8 @@ public static class Sprites {
 
     public static int ThirdSelected {
         get {
-            if(Main.settings.thirdSelected == null)
-                return -1;
-            if(sprites.ContainsKey(Main.settings.thirdSelected))
-                return sprites.Keys.ToList().IndexOf(Main.settings.thirdSelected);
+            if(Main.settings.thirdSelected == null) return -1;
+            if(sprites.ContainsKey(Main.settings.thirdSelected)) return sprites.Keys.IndexOf(Main.settings.thirdSelected);
             Main.settings.thirdSelected = null;
             return -1;
         }
@@ -240,7 +233,7 @@ public static class Sprites {
 
     public static bool Remove(int index) {
         if(index < 0 || index >= sprites.Count) return false;
-        return Remove(sprites.Keys.ElementAt(index));
+        return Remove(sprites.Keys[index]);
     }
 
     public static Texture2D ResizeFix(this Texture2D texture) {
