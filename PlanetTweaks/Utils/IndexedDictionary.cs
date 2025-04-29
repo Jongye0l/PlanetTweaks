@@ -82,10 +82,7 @@ public class IndexedDictionary<K, V> : IDictionary<K, V> {
 
     public void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex) => throw new NotImplementedException();
 
-    public IEnumerator<KeyValuePair<K, V>> GetEnumerator() {
-        int i = 0;
-        return Keys.Select(k => new KeyValuePair<K, V>(k, Values[i++])).GetEnumerator();
-    }
+    public IEnumerator<KeyValuePair<K, V>> GetEnumerator() => Keys.Select((t, i) => new KeyValuePair<K, V>(t, Values[i])).GetEnumerator();
 
     public bool Remove(K key) {
         int index = Keys.IndexOf(key);
