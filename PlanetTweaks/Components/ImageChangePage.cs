@@ -20,6 +20,7 @@ public class ImageChangePage : MonoBehaviour {
     public static Sprite pageBtnEntered;
     public static Sprite pageBtnDisabled;
     private const int Size = 50;
+    private static readonly List<(CustomRect, ButtonEvent)> events = [];
 
     private static bool NeedColor(int i, int j) => j >= Size / 2 - 1 - i / 2 && j <= Size / 2 + i / 2;
 
@@ -41,7 +42,7 @@ public class ImageChangePage : MonoBehaviour {
             pageBtnDisabled = Sprite.Create(texture, new Rect(0, 0, Size, Size), new Vector2(0.5f, 0.5f));
         }
         // 왼쪽 페이지 버튼
-        events.Add((new Rect(18, 129, 43, 44), new ButtonEvent(
+        events.Add((new CustomRect(18, 129, 43, 44), new ButtonEvent(
             delegate {
                 if(instance.page == 0) return;
                 instance.leftPageBtn.sprite = pageBtnEntered;
@@ -55,7 +56,7 @@ public class ImageChangePage : MonoBehaviour {
                 instance.ChangePage(instance.page - 1);
             })));
         // 오른쪽 페이지 버튼
-        events.Add((new Rect(1232, 129, 43, 44), new ButtonEvent(
+        events.Add((new CustomRect(1232, 129, 43, 44), new ButtonEvent(
             delegate {
                 instance.rightPageBtn.sprite = pageBtnEntered;
             },
@@ -66,7 +67,7 @@ public class ImageChangePage : MonoBehaviour {
                 instance.ChangePage(instance.page + 1);
             })));
         // 메인메뉴로 나가기
-        events.Add((new Rect(1920 - 400, 1080 - 150, 400, 150), new ButtonEvent(
+        events.Add((new CustomRect(1920 - 400, 1080 - 150, 400, 150), new ButtonEvent(
             delegate {
                 scrFloor floor = PlanetTweaksFloorController.instance.exitFloor;
                 floor.DOKill();
@@ -78,7 +79,7 @@ public class ImageChangePage : MonoBehaviour {
                 floor.transform.DOScale(new Vector3(0.5f, 0.5f), 0.5f);
             }, Exit)));
         // 공 바꾸기
-        events.Add((new Rect(1920 - 615, 1080 - 950, 600, 600), new ButtonEvent(
+        events.Add((new CustomRect(1920 - 615, 1080 - 950, 600, 600), new ButtonEvent(
             delegate {
                 PlanetTweaksFloorController.instance.planetFloor.transform.DOScale(new Vector3(1, 1), 0.5f);
             },
@@ -107,7 +108,7 @@ public class ImageChangePage : MonoBehaviour {
             for(int j = 0; j < 4; j++) {
                 int copyI = i;
                 int copyJ = j;
-                if(i == 5 && j == 3) events.Add((new Rect(1051, 825, 164, 164), new ButtonEvent(
+                if(i == 5 && j == 3) events.Add((new CustomRect(1051, 825, 164, 164), new ButtonEvent(
                     delegate {
                         scrFloor floor = PlanetTweaksFloorController.instance.floors[copyJ * 6 + copyI].floor;
                         floor.transform.DOKill();
@@ -131,7 +132,7 @@ public class ImageChangePage : MonoBehaviour {
                 else {
                     float x = 79 + i * 194 + (i > 1 ? i > 4 ? 2 : 1 : 0);
                     float y = 112 + j * 238 - (j > 1 ? 1 : 0);
-                    events.Add((new Rect(x, y, 164, 164), new ButtonEvent(
+                    events.Add((new CustomRect(x, y, 164, 164), new ButtonEvent(
                         delegate {
                             PlanetSettingFloor settingFloor = PlanetTweaksFloorController.instance.floors[copyJ * 6 + copyI];
                             scrFloor floor = settingFloor.floor;
@@ -192,7 +193,7 @@ public class ImageChangePage : MonoBehaviour {
                             } else return;
                             instance.UpdateFloorIcons();
                         })));
-                    events.Add((new Rect(x, y, 164, 40), new ButtonEvent(
+                    events.Add((new CustomRect(x, y, 164, 40), new ButtonEvent(
                         delegate {
                             TextMesh text = PlanetTweaksFloorController.instance.floors[copyJ * 6 + copyI].nameText;
                             text.DOKill();
@@ -301,6 +302,8 @@ public class ImageChangePage : MonoBehaviour {
     private bool changing;
 
     private int page;
+    private int finalWidth;
+    private int finalHeight;
 
     public TextMesh planetText;
     public TextMesh pageText;
@@ -345,7 +348,26 @@ public class ImageChangePage : MonoBehaviour {
         instance.UpdateFloorIcons();
     }
 
-    private static readonly List<(Rect, ButtonEvent)> events = [];
+    public void Update() {
+        int temp = Screen.width;
+        if(finalWidth != temp) {
+            float fixedWidth = temp / 1920f;
+            foreach((CustomRect customRect, ButtonEvent _) in events) {
+                customRect.fixedRect.width = customRect.rect.width * fixedWidth;
+                customRect.fixedRect.x = customRect.rect.x * fixedWidth;
+            }
+            finalWidth = temp;
+        }
+        temp = Screen.height;
+        if(finalHeight != temp) {
+            float fixedHeight = temp / 1080f;
+            foreach((CustomRect customRect, ButtonEvent _) in events) {
+                customRect.fixedRect.height = customRect.rect.height * fixedHeight;
+                customRect.fixedRect.y = customRect.rect.y * fixedHeight;
+            }
+            finalHeight = temp;
+        }
+    }
 
     public void OnGUI() {
         if(scrController.instance.paused) return;
@@ -359,18 +381,18 @@ public class ImageChangePage : MonoBehaviour {
 
     public void HandleButtonEvent() {
         Vector2 mouse = Event.current.mousePosition;
-        foreach((Rect rect, ButtonEvent btnEvent) in events) {
+        foreach((CustomRect rect, ButtonEvent btnEvent) in events) {
             try {
-                if(!btnEvent.Entered && rect.Contains(mouse)) {
+                if(!btnEvent.Entered && rect.fixedRect.Contains(mouse)) {
                     if(!input && !changing && !UnityModManager.UI.Instance.Opened) {
                         btnEvent.Entered = true;
                         btnEvent.OnEntered.Invoke();
                     }
-                } else if(btnEvent.Entered && !rect.Contains(mouse)) {
+                } else if(btnEvent.Entered && !rect.fixedRect.Contains(mouse)) {
                     btnEvent.Entered = false;
                     btnEvent.OnExited.Invoke();
                 }
-                if(!input && !changing && !UnityModManager.UI.Instance.Opened && GUI.Button(rect, "", GUIStyle.none))
+                if(!input && !changing && !UnityModManager.UI.Instance.Opened && GUI.Button(rect.fixedRect, "", GUIStyle.none))
                     btnEvent.OnClicked.Invoke();
             } catch (Exception) {
                 // ignored
@@ -383,5 +405,10 @@ public class ImageChangePage : MonoBehaviour {
         public QuickAction OnEntered = onEntered;
         public QuickAction OnExited = onExited;
         public QuickAction OnClicked = onClicked;
+    }
+
+    private class CustomRect(float x, float y, float width, float height) {
+        public Rect rect = new(x, y, width, height);
+        public Rect fixedRect;
     }
 }
