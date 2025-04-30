@@ -9,11 +9,13 @@ public class RendererController : MonoBehaviour {
 
     private void Awake() {
         planet = GetComponentInParent<scrPlanet>();
-        SpriteRenderer renderer = this.renderer = gameObject.AddComponent<SpriteRenderer>();
-        PlanetRenderer planetRenderer = this.planetRenderer = planet.planetRenderer;
-        renderer.sortingOrder = planetRenderer.GetComponent<SpriteRenderer>().sortingOrder + 1;
-        renderer.sortingLayerID = planetRenderer.faceDetails.sortingLayerID;
-        renderer.sortingLayerName = planetRenderer.faceDetails.sortingLayerName;
+        if(!gameObject.GetComponent<SpriteRenderer>()) {
+            SpriteRenderer renderer = this.renderer = gameObject.AddComponent<SpriteRenderer>();
+            PlanetRenderer planetRenderer = this.planetRenderer = planet.planetRenderer;
+            renderer.sortingOrder = planetRenderer.GetComponent<SpriteRenderer>().sortingOrder + 1;
+            renderer.sortingLayerID = planetRenderer.faceDetails.sortingLayerID;
+            renderer.sortingLayerName = planetRenderer.faceDetails.sortingLayerName;
+        } 
         PlanetTweaksPlanetController.GetInstance().spriteDictionary[planet] = renderer;
     }
 
