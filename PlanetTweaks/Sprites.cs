@@ -92,7 +92,10 @@ public static class Sprites {
             scrPlanet planet = scrController.instance?.planetRed;
 
             if(value < 0) {
-                Main.settings.redSelected = null;
+                if(Main.settings.redSelected != null) {
+                    Main.settings.redSelected = null;
+                    Main.instance.SaveSetting();
+                }
                 RedSprite = null;
                 Apply(planet, null);
                 return;
@@ -121,7 +124,10 @@ public static class Sprites {
         set {
             scrPlanet planet = scrController.instance?.planetBlue;
             if(value < 0) {
-                Main.settings.blueSelected = null;
+                if(Main.settings.blueSelected != null) {
+                    Main.settings.blueSelected = null;
+                    Main.instance.SaveSetting();
+                }
                 BlueSprite = null;
                 Apply(planet, null);
                 return;
@@ -150,7 +156,10 @@ public static class Sprites {
         set {
             scrPlanet planet = scrController.instance?.planetGreen;
             if(value < 0) {
-                Main.settings.thirdSelected = null;
+                if(Main.settings.thirdSelected != null) {
+                    Main.settings.thirdSelected = null;
+                    Main.instance.SaveSetting();
+                }
                 ThirdSprite = null;
                 Apply(planet, null);
                 return;
