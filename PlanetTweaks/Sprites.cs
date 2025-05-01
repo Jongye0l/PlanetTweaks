@@ -25,8 +25,7 @@ public static class Sprites {
     public static SpriteRenderer AddRenderer(this scrPlanet planet) {
         SpriteRenderer renderer = new GameObject("PlanetTweaksRenderer") {
             transform = {
-                parent = planet.transform,
-                position = planet.transform.position
+                parent = planet.transform
             }
         }.AddComponent<RendererController>().renderer;
         Apply(renderer, planet.isRed    ? RedSprite :
