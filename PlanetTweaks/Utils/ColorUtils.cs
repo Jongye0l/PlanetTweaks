@@ -25,7 +25,7 @@ public static class ColorUtils {
             case 3:
                 return Main.settings.thirdColorCustom;
             default:
-                return new Color(0.3f, 0.7f, 1);
+                return Settings.DefaultThirdColor;
         }
     }
 
@@ -44,11 +44,8 @@ public static class ColorUtils {
         else {
             Color realColor = scrMisc.PlayerColorToRealColor(c);
             Color tailColor = realColor;
-            if(realColor == PlanetRenderer.transBlueColor || realColor == PlanetRenderer.transPinkColor || realColor == PlanetRenderer.nbYellowColor) {
-                tailColor = Color.white;
-            } else if(realColor == PlanetRenderer.nbPurpleColor) {
-                tailColor = Color.black;
-            }
+            if(realColor == PlanetRenderer.transBlueColor || realColor == PlanetRenderer.transPinkColor || realColor == PlanetRenderer.nbYellowColor) tailColor = Color.white;
+            else if(realColor == PlanetRenderer.nbPurpleColor) tailColor = Color.black;
             planet.planetRenderer.EnableCustomColor();
             planet.planetRenderer.SetRainbow(false);
             planet.planetRenderer.SetPlanetColor(realColor);
