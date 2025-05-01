@@ -35,11 +35,13 @@ public class Main : JAMod {
 
     protected override void OnEnable() {
         bundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Path, "planettweaks"));
-        Sprites.Load();
         Sprites.Init();
         if(!scrController.instance) return;
         foreach(scrPlanet planet in scrController.instance.planetarySystem.allPlanets) planet.GetOrAddRenderer();
         if(scnLevelSelect.instance && !PlanetTweaksFloorController.instance) Patch.Start();
+        Sprites.RedSelected = Sprites.RedSelected;
+        Sprites.BlueSelected = Sprites.BlueSelected;
+        Sprites.ThirdSelected = Sprites.ThirdSelected;
     }
 
     protected override void OnDisable() {

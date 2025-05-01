@@ -99,7 +99,10 @@ public static class Sprites {
             }
             if(value >= sprites.Count) return;
             KeyValuePair<string, object> pair = sprites.ElementAt(value);
-            Main.settings.redSelected = pair.Key;
+            if(Main.settings.redSelected != pair.Key) {
+                Main.settings.redSelected = pair.Key;
+                Main.instance.SaveSetting();
+            }
             RedSprite = pair.Value;
 
             if(!planet) return;
@@ -125,7 +128,10 @@ public static class Sprites {
             }
             if(value >= sprites.Count) return;
             KeyValuePair<string, object> pair = sprites.ElementAt(value);
-            Main.settings.blueSelected = pair.Key;
+            if(Main.settings.blueSelected != pair.Key) {
+                Main.settings.blueSelected = pair.Key;
+                Main.instance.SaveSetting();
+            }
             BlueSprite = pair.Value;
 
             if(!planet) return;
@@ -151,7 +157,10 @@ public static class Sprites {
             }
             if(value >= sprites.Count) return;
             KeyValuePair<string, object> pair = sprites.ElementAt(value);
-            Main.settings.thirdSelected = pair.Key;
+            if(Main.settings.thirdSelected != pair.Key) {
+                Main.settings.thirdSelected = pair.Key;
+                Main.instance.SaveSetting();
+            }
             ThirdSprite = pair.Value;
 
             if(!planet) return;
@@ -177,6 +186,16 @@ public static class Sprites {
     }
 
     public static void Init() {
+        DirectoryInfo dir = GetPath().CreateIfNotExists();
+        foreach(FileInfo file in dir.GetFiles()) {
+            try {
+                Add(Path.Combine(dir.FullName, file.Name));
+            } catch (Exception e) {
+                Main.instance.Log("Failed to load sprite: " + file.Name);
+                Main.instance.NativeLog(e);
+            }
+        }
+        
         fileDialog = new VistaOpenFileDialog();
         fileDialog.Multiselect = false;
 
@@ -194,18 +213,6 @@ public static class Sprites {
             }
         }
         return null;
-    }
-
-    public static void Load() {
-        DirectoryInfo dir = GetPath().CreateIfNotExists();
-        foreach(FileInfo file in dir.GetFiles()) {
-            try {
-                Add(Path.Combine(dir.FullName, file.Name));
-            } catch (Exception e) {
-                Main.instance.Log("Failed to load sprite: " + file.Name);
-                Main.instance.NativeLog(e);
-            }
-        }
     }
 
     public static void Add(string fileName) {
