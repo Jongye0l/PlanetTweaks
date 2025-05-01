@@ -46,7 +46,7 @@ public class ImageChangePage : MonoBehaviour {
         }
     }
 
-    private void UpdatePageText() => pageText.text = string.Format(Main.instance.Localization["ChangePage.Page"], page + 1);
+    private void UpdatePageText() => pageText.text = string.Format(Main.instance.Localization["ChangePage.Page2"], page + 1, Math.Max(Mathf.CeilToInt(Sprites.sprites.Count / 23f), 1));
     
     public void ChangePage(int page) {
         if(page == this.page) return;
@@ -97,8 +97,6 @@ public class ImageChangePage : MonoBehaviour {
     public bool changing;
 
     public int page;
-    private int finalWidth;
-    private int finalHeight;
 
     public TextMesh planetText;
     public TextMesh pageText;
@@ -145,8 +143,8 @@ public class ImageChangePage : MonoBehaviour {
     }
 
     public void Update() {
-        if(Input.GetKeyDown(KeyCode.RightArrow)) instance.ChangePage(instance.page + 1);
-        else if(instance.page != 0 && Input.GetKeyDown(KeyCode.LeftArrow)) ChangePage(instance.page - 1);
+        if(instance.page != 0 && Input.GetKeyDown(KeyCode.LeftArrow)) ChangePage(instance.page - 1);
+        else if(Sprites.sprites.Count > (instance.page + 1) * 23 && Input.GetKeyDown(KeyCode.RightArrow)) instance.ChangePage(instance.page + 1);
     }
 
     private class ColorGetSetter(FloorRenderer floorRenderer) {
