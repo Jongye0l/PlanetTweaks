@@ -190,7 +190,7 @@ public static class Sprites {
             try {
                 return fileDialog.FileName;
             } catch (Exception e) {
-                Main.instance.Log(e.StackTrace);
+                Main.instance.NativeLog(e.StackTrace);
             }
         }
         return null;
@@ -201,8 +201,9 @@ public static class Sprites {
         foreach(FileInfo file in dir.GetFiles()) {
             try {
                 Add(Path.Combine(dir.FullName, file.Name));
-            } catch (Exception) {
-                // ignored
+            } catch (Exception e) {
+                Main.instance.Log("Failed to load sprite: " + file.Name);
+                Main.instance.NativeLog(e);
             }
         }
     }
@@ -211,9 +212,12 @@ public static class Sprites {
         if(!File.Exists(fileName))
             throw new ArgumentException("file doesn't exists!");
         string name = Path.GetFileNameWithoutExtension(fileName);
-        string first = name;
-        for(int i = 1; sprites.ContainsKey(name); i++) name = first + i;
-        File.Copy(fileName, Path.Combine(GetPath(), name + Path.GetExtension(fileName)));
+        string defaultFolder = GetPath();
+        if(defaultFolder != Path.GetDirectoryName(fileName)) {
+            string first = name;
+            for(int i = 1; sprites.ContainsKey(name); i++) name = first + i;
+            File.Copy(fileName, Path.Combine(defaultFolder, name + Path.GetExtension(fileName)));
+        }
         if(fileName.EndsWith(".gif")) sprites.Add(name, new GifImage(fileName));
         else if(fileName.EndsWith(".gifmeta")) sprites.Add(name, GifImage.Load(fileName));
         else {
