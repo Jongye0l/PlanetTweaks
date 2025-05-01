@@ -21,8 +21,7 @@ public class RendererController : MonoBehaviour {
     }
 
     private void Update() {
-        if(!planet || !renderer) return;
-        if(planet.dummyPlanets) {
+        if(!planet || !planetRenderer || planet.dummyPlanets) {
             Destroy(gameObject);
             return;
         }
