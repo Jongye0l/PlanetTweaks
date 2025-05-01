@@ -16,7 +16,7 @@ public class RendererController : MonoBehaviour {
             renderer.sortingOrder = planetRenderer.GetComponent<SpriteRenderer>().sortingOrder + 1;
             renderer.sortingLayerID = planetRenderer.faceDetails.sortingLayerID;
             renderer.sortingLayerName = planetRenderer.faceDetails.sortingLayerName;
-        } 
+        }
         PlanetTweaksPlanetController.GetInstance().spriteDictionary[planet] = renderer;
     }
 

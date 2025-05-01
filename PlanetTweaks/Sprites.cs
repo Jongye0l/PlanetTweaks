@@ -29,7 +29,8 @@ public static class Sprites {
                 position = planet.transform.position
             }
         }.AddComponent<RendererController>().renderer;
-        Apply(renderer, planet.isRed ? RedSprite : !planet.isExtra ? BlueSprite : ThirdSprite);
+        Apply(renderer, planet.isRed    ? RedSprite :
+                        !planet.isExtra ? BlueSprite : ThirdSprite);
         return renderer;
     }
 
@@ -222,18 +223,17 @@ public static class Sprites {
         }
     }
 
-    public static bool Remove(string name) {
-        if(!sprites.ContainsKey(name)) return false;
+    public static void Remove(string name) {
+        if(!sprites.ContainsKey(name)) return;
         if(Main.settings.redSelected == name) RedSelected = -1;
         if(Main.settings.blueSelected == name) BlueSelected = -1;
         if(Main.settings.thirdSelected == name) ThirdSelected = -1;
         sprites.Remove(name);
-        return true;
     }
 
-    public static bool Remove(int index) {
-        if(index < 0 || index >= sprites.Count) return false;
-        return Remove(sprites.Keys[index]);
+    public static void Remove(int index) {
+        if(index < 0 || index >= sprites.Count) return;
+        Remove(sprites.Keys[index]);
     }
 
     public static Texture2D ResizeFix(this Texture2D texture) {

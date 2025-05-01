@@ -5,7 +5,7 @@ namespace PlanetTweaks.Components;
 
 public class DefaultTileMouseDetector : MonoBehaviour {
     public int index;
-    
+
     private void OnMouseEnter() {
         PlanetSettingFloor settingFloor = PlanetTweaksFloorController.instance.floors[index];
         scrFloor floor = settingFloor.floor;
@@ -16,19 +16,20 @@ public class DefaultTileMouseDetector : MonoBehaviour {
         sprite.transform.DOKill();
         sprite.transform.DOScale(new Vector3(0.875f, 0.875f), 0.5f);
     }
-    
+
     private void ShowPreview() {
         int index = ImageChangePage.instance.page * 23 + this.index;
-        if((scrController.instance.planetarySystem.chosenPlanet.isRed    ? Sprites.RedSelected :
-            !scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == index)
+        PlanetarySystem planetarySystem = scrController.instance.planetarySystem;
+        if((planetarySystem.chosenPlanet.isRed    ? Sprites.RedSelected :
+            !planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == index)
             return;
         PlanetTweaksFloorController.instance.floors[index].preview.gameObject.SetActive(true);
         object value = Sprites.sprites.ElementAt(index).Value;
-        if(scrController.instance.planetarySystem.chosenPlanet.isRed) Sprites.RedPreview = value;
-        else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra) Sprites.BluePreview = value;
+        if(planetarySystem.chosenPlanet.isRed) Sprites.RedPreview = value;
+        else if(!planetarySystem.chosenPlanet.isExtra) Sprites.BluePreview = value;
         else Sprites.ThirdPreview = value;
     }
-    
+
     private void OnMouseExit() {
         PlanetSettingFloor settingFloor = PlanetTweaksFloorController.instance.floors[index];
         scrFloor floor = settingFloor.floor;
@@ -42,7 +43,7 @@ public class DefaultTileMouseDetector : MonoBehaviour {
         else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra) Sprites.BluePreview = null;
         else Sprites.ThirdPreview = null;
     }
-    
+
     private void OnMouseDown() {
         PlanetSettingFloor settingFloor = PlanetTweaksFloorController.instance.floors[this.index];
         scrFloor floor = settingFloor.floor;
@@ -53,7 +54,8 @@ public class DefaultTileMouseDetector : MonoBehaviour {
         sprite.transform.DOComplete();
         int index = ImageChangePage.instance.page * 23 + this.index;
         if(Input.GetMouseButtonDown(0))
-            if((scrController.instance.planetarySystem.chosenPlanet.isRed ? Sprites.RedSelected : !scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == index) {
+            if((scrController.instance.planetarySystem.chosenPlanet.isRed    ? Sprites.RedSelected :
+                !scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == index) {
                 if(scrController.instance.planetarySystem.chosenPlanet.isRed) Sprites.RedSelected = -1;
                 else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra) Sprites.BlueSelected = -1;
                 else Sprites.ThirdSelected = -1;

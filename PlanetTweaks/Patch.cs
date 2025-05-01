@@ -8,7 +8,6 @@ using JALib.Tools;
 using PlanetTweaks.Components;
 using PlanetTweaks.Utils;
 using UnityEngine;
-using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 namespace PlanetTweaks;

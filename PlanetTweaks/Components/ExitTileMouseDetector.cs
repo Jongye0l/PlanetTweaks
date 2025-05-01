@@ -9,7 +9,7 @@ public class ExitTileMouseDetector : MonoBehaviour {
         floor.DOKill();
         floor.transform.DOScale(new Vector3(0.55f, 0.55f), 0.5f);
     }
-    
+
     private void OnMouseExit() {
         scrFloor floor = PlanetTweaksFloorController.instance.exitFloor;
         floor.DOKill();

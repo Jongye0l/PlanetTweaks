@@ -107,7 +107,8 @@ public class Main : JAMod {
                 $"<color={ColorUtils.GetRealDefaultThirdColor().Hex()}>{localization["Setting.ThirdColorType1"]}</color>",
                 $"<color={ColorUtils.GetRealColor(true).Hex()}>{localization["Setting.ThirdColorType2"]}</color>",
                 $"<color={ColorUtils.GetRealColor(false).Hex()}>{localization["Setting.ThirdColorType3"]}</color>",
-                $"<color={setting.thirdColorCustom.Hex()}>{localization["Setting.ThirdColorType4"]}</color>"]);
+                $"<color={setting.thirdColorCustom.Hex()}>{localization["Setting.ThirdColorType4"]}</color>"
+            ]);
             if(newColorType != setting.thirdColorType) {
                 setting.thirdColorType = newColorType;
                 ColorUtils.SetThirdColor();

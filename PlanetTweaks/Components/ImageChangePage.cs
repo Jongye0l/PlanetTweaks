@@ -17,7 +17,7 @@ public class ImageChangePage : MonoBehaviour {
     private List<Tween> activeTweens = [];
 
     public static void WipeToMove() => scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, OnMove);
-    
+
     private static void OnMove() {
         scrController controller = scrController.instance;
         PlanetarySystem planetarySystem = controller.planetarySystem;
@@ -68,8 +68,10 @@ public class ImageChangePage : MonoBehaviour {
             PlanetSettingFloor cur = PlanetTweaksFloorController.instance.floors[i];
             Sprites.Apply(cur.icon, null);
             cur.nameText.text = null;
-            cur.floor.SetTileColor((scrController.instance.planetarySystem.chosenPlanet.isRed ? Sprites.RedSelected :
-                                    !scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == i + page * 23 ? Color.yellow : floorColor);
+            cur.floor.SetTileColor((scrController.instance.planetarySystem.chosenPlanet.isRed    ? Sprites.RedSelected :
+                                    !scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == i + page * 23
+                                       ? Color.yellow
+                                       : floorColor);
         }
         for(int i = 0; i < settingFloors.Length - 1; i++) {
             if(i + page * 23 >= Sprites.sprites.Count) break;
@@ -81,7 +83,7 @@ public class ImageChangePage : MonoBehaviour {
     }
 
     private void UpdatePageText() => pageText.text = string.Format(Main.instance.Localization["ChangePage.Page2"], page + 1, Math.Max(Mathf.CeilToInt(Sprites.sprites.Count / 23f), 1));
-    
+
     public void ChangePage(int page) {
         if(page == this.page) return;
         List<Tween> tweens = activeTweens;
@@ -110,7 +112,7 @@ public class ImageChangePage : MonoBehaviour {
         tweens.Clear();
         instance.UpdateFloorIcons();
         Tween fade = null;
-        for(int i = 0; i < 23; i++){
+        for(int i = 0; i < 23; i++) {
             PlanetSettingFloor settingFloor = PlanetTweaksFloorController.instance.floors[i];
             ColorGetSetter colorGetter = new(settingFloor.floor.floorRenderer);
             tweens.AddRange([

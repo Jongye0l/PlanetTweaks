@@ -7,19 +7,19 @@ namespace PlanetTweaks.Components;
 
 public class DefaultTileTextMouseDetector : MonoBehaviour {
     public int index;
-    
+
     private void OnMouseEnter() {
         TextMesh text = PlanetTweaksFloorController.instance.floors[index].nameText;
         text.DOKill();
         DOTween.To(() => text.color, c => text.color = c, Color.yellow, 0.5f).SetTarget(text);
     }
-    
+
     private void OnMouseExit() {
         TextMesh text = PlanetTweaksFloorController.instance.floors[index].nameText;
         text.DOKill();
         DOTween.To(() => text.color, c => text.color = c, Color.white, 0.5f).SetTarget(text);
     }
-    
+
     private void OnMouseDown() {
         TextMesh text = PlanetTweaksFloorController.instance.floors[this.index].nameText;
         int index = ImageChangePage.instance.page * 23 + this.index;

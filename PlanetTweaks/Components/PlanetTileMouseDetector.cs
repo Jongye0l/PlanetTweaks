@@ -9,11 +9,11 @@ public class PlanetTileMouseDetector : MonoBehaviour {
     private void OnMouseEnter() {
         PlanetTweaksFloorController.instance.planetFloor.transform.DOScale(new Vector3(1, 1), 0.5f);
     }
-    
+
     private void OnMouseExit() {
         PlanetTweaksFloorController.instance.planetFloor.transform.DOScale(new Vector3(0.8f, 0.8f), 0.5f);
     }
-    
+
     private void OnMouseDown() {
         ImageChangePage.instance.changing = true;
         scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, AfterWipe);
