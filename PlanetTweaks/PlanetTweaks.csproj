@@ -502,9 +502,14 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Components\DefaultTileMouseDetector.cs" />
+        <Compile Include="Components\DefaultTileTextMouseDetector.cs" />
+        <Compile Include="Components\ExitTileMouseDetector.cs" />
+        <Compile Include="Components\ImportTileMouseDetector.cs" />
         <Compile Include="Components\GifRenderer.cs" />
         <Compile Include="Components\ImageChangePage.cs" />
         <Compile Include="Components\PlanetSettingFloor.cs" />
+        <Compile Include="Components\PlanetTileMouseDetector.cs" />
         <Compile Include="Components\PlanetTweaksFloorController.cs" />
         <Compile Include="Components\PlanetTweaksPlanetController.cs" />
         <Compile Include="Components\RenameInputField.cs" />

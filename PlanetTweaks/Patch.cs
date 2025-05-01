@@ -8,6 +8,7 @@ using JALib.Tools;
 using PlanetTweaks.Components;
 using PlanetTweaks.Utils;
 using UnityEngine;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 namespace PlanetTweaks;
@@ -84,7 +85,9 @@ public static class Patch {
         PlanetTweaksFloorController controller = new GameObject("PlanetTweaksFloorController").AddComponent<PlanetTweaksFloorController>();
         controller.eventFloor = eventFloor;
         if(!(controller.planetFloor = FloorUtils.AddEventFloor(-15, -3, null))) controller.planetFloor = FloorUtils.AddFloor(-15, -3);
+        controller.planetFloor.gameObject.AddComponent<PlanetTileMouseDetector>();
         scrFloor exitFloor = controller.exitFloor = FloorUtils.AddFloor(-13.9f, -5.65f);
+        exitFloor.gameObject.AddComponent<ExitTileMouseDetector>();
         exitFloor.transform.ScaleXY(0.5f, 0.5f);
         exitFloor.isportal = true;
         exitFloor.floorRenderer.sortingOrder = 0;
@@ -114,12 +117,13 @@ public static class Patch {
                     scrPortalParticles particle = Object.Instantiate(PrefabLibrary.instance.lastTilePortalPrefab, floor.transform);
                     particle.Invoke("Start");
                     Object.Destroy(particle);
+                    floor.gameObject.AddComponent<ImportTileMouseDetector>();
                 } else {
                     floor.floorRenderer.renderer.sortingOrder = 1;
                     floor.floorRenderer.renderer.sortingLayerID = 0;
                     floor.floorRenderer.renderer.sortingLayerName = "Default";
+                    floor.gameObject.AddComponent<DefaultTileMouseDetector>().index = i * 6 + j;
                 }
-
                 TextMesh textMesh = settingFloor.nameText = new GameObject().AddComponent<TextMesh>();
                 textMesh.transform.parent = obj.transform;
                 (settingFloor.nameRenderer = textMesh.gameObject.GetOrAddComponent<MeshRenderer>()).sortingOrder = 0;

@@ -29,7 +29,6 @@ public class Main : JAMod {
     protected override void OnSetup() {
         settings = (Settings) Setting;
         settingGUI = new SettingGUI(this);
-        MainThread.Run(this, ImageChangePage.Init);
         Patcher.AddPatch(typeof(Patch));
         SettingMigration();
     }
