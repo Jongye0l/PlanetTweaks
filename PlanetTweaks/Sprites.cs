@@ -210,10 +210,10 @@ public static class Sprites {
     public static void Add(string fileName) {
         if(!File.Exists(fileName))
             throw new ArgumentException("file doesn't exists!");
-        string name = new FileInfo(fileName).Name;
-        name = name[..name.LastIndexOf('.')];
+        string name = Path.GetFileNameWithoutExtension(fileName);
         string first = name;
         for(int i = 1; sprites.ContainsKey(name); i++) name = first + i;
+        File.Copy(fileName, Path.Combine(GetPath(), name + Path.GetExtension(fileName)));
         if(fileName.EndsWith(".gif")) sprites.Add(name, new GifImage(fileName));
         else if(fileName.EndsWith(".gifmeta")) sprites.Add(name, GifImage.Load(fileName));
         else {
