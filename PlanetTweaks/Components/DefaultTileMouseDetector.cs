@@ -12,19 +12,21 @@ public class DefaultTileMouseDetector : MonoBehaviour {
         SpriteRenderer sprite = settingFloor.icon;
         if(!sprite.sprite) return;
         floor.transform.DOKill();
-        floor.transform.DOScale(new Vector3(1, 1), 0.5f).OnComplete(delegate {
-            int index = ImageChangePage.instance.page * 23 + this.index;
-            if((scrController.instance.planetarySystem.chosenPlanet.isRed    ? Sprites.RedSelected :
-                !scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == index)
-                return;
-            settingFloor.preview.gameObject.SetActive(true);
-            object value = Sprites.sprites.ElementAt(index).Value;
-            if(scrController.instance.planetarySystem.chosenPlanet.isRed) Sprites.RedPreview = value;
-            else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra) Sprites.BluePreview = value;
-            else Sprites.ThirdPreview = value;
-        }).SetAutoKill(false);
+        floor.transform.DOScale(new Vector3(1, 1), 0.5f).OnComplete(ShowPreview).SetAutoKill(false);
         sprite.transform.DOKill();
         sprite.transform.DOScale(new Vector3(0.875f, 0.875f), 0.5f);
+    }
+    
+    private void ShowPreview() {
+        int index = ImageChangePage.instance.page * 23 + this.index;
+        if((scrController.instance.planetarySystem.chosenPlanet.isRed    ? Sprites.RedSelected :
+            !scrController.instance.planetarySystem.chosenPlanet.isExtra ? Sprites.BlueSelected : Sprites.ThirdSelected) == index)
+            return;
+        PlanetTweaksFloorController.instance.floors[index].preview.gameObject.SetActive(true);
+        object value = Sprites.sprites.ElementAt(index).Value;
+        if(scrController.instance.planetarySystem.chosenPlanet.isRed) Sprites.RedPreview = value;
+        else if(!scrController.instance.planetarySystem.chosenPlanet.isExtra) Sprites.BluePreview = value;
+        else Sprites.ThirdPreview = value;
     }
     
     private void OnMouseExit() {

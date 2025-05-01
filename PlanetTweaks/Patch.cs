@@ -52,36 +52,7 @@ public static class Patch {
     [JAPatch(typeof(scnLevelSelect), nameof(Start), PatchType.Postfix, false)]
     public static void Start() {
         scrFloor eventFloor;
-        if(!(eventFloor = FloorUtils.AddEventFloor(-2, -3, delegate {
-               scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, delegate {
-                   scrController controller = scrController.instance;
-                   PlanetarySystem planetarySystem = controller.planetarySystem;
-                   planetarySystem.chosenPlanet = planetarySystem.planetRed;
-                   controller.camy.zoomSize = 0.5f;
-                   controller.camy.isPulsingOnHit = false;
-                   new GameObject().AddComponent<ImageChangePage>();
-                   scrFloor floor = PlanetTweaksFloorController.instance.planetFloor;
-                   if(Main.settings.thirdPlanet) {
-                       planetarySystem.SetNumPlanets(3);
-                       floor.numPlanets = 3;
-                       planetarySystem.planetRed.currfloor = floor;
-                       planetarySystem.planetBlue.currfloor = floor;
-                       planetarySystem.planetGreen.currfloor = floor;
-                       FieldInfo field = typeof(scrPlanet).Field("endingTween");
-                       field.SetValue(planetarySystem.planetRed, 1);
-                       field.SetValue(planetarySystem.planetBlue, 1);
-                       field.SetValue(planetarySystem.planetGreen, 1);
-                   }
-                   planetarySystem.chosenPlanet.transform.LocalMoveXY(-15, -3);
-                   planetarySystem.chosenPlanet.transform.position = new Vector3(-15, -3);
-                   controller.camy.ViewObjectInstant(planetarySystem.chosenPlanet.transform);
-                   controller.camy.ViewVectorInstant(new Vector2(-18, -3.5f));
-                   controller.camy.isMoveTweening = false;
-                   scrUIController.instance.WipeFromBlack();
-                   planetarySystem.planetList.ForEach(p => p.currfloor = floor);
-                   PlanetTweaksFloorController.instance.showing = true;
-               });
-           }, GameObject.Find("outer ring").transform))) return;
+        if(!(eventFloor = FloorUtils.AddEventFloor(-2, -3, ImageChangePage.WipeToMove, GameObject.Find("outer ring").transform))) return;
         PlanetTweaksFloorController controller = new GameObject("PlanetTweaksFloorController").AddComponent<PlanetTweaksFloorController>();
         controller.eventFloor = eventFloor;
         if(!(controller.planetFloor = FloorUtils.AddEventFloor(-15, -3, null))) controller.planetFloor = FloorUtils.AddFloor(-15, -3);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using ByteSheep.Events;
 using DG.Tweening;
 using JALib.Core;
@@ -15,15 +16,48 @@ public class ImageChangePage : MonoBehaviour {
     public static ImageChangePage instance;
     private List<Tween> activeTweens = [];
 
+    public static void WipeToMove() => scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, OnMove);
+    
+    private static void OnMove() {
+        scrController controller = scrController.instance;
+        PlanetarySystem planetarySystem = controller.planetarySystem;
+        planetarySystem.chosenPlanet = planetarySystem.planetRed;
+        controller.camy.zoomSize = 0.5f;
+        controller.camy.isPulsingOnHit = false;
+        new GameObject().AddComponent<ImageChangePage>();
+        scrFloor floor = PlanetTweaksFloorController.instance.planetFloor;
+        if(Main.settings.thirdPlanet) {
+            planetarySystem.SetNumPlanets(3);
+            floor.numPlanets = 3;
+            planetarySystem.planetRed.currfloor = floor;
+            planetarySystem.planetBlue.currfloor = floor;
+            planetarySystem.planetGreen.currfloor = floor;
+            FieldInfo field = typeof(scrPlanet).Field("endingTween");
+            field.SetValue(planetarySystem.planetRed, 1);
+            field.SetValue(planetarySystem.planetBlue, 1);
+            field.SetValue(planetarySystem.planetGreen, 1);
+        }
+        planetarySystem.chosenPlanet.transform.LocalMoveXY(-15, -3);
+        planetarySystem.chosenPlanet.transform.position = new Vector3(-15, -3);
+        controller.camy.ViewObjectInstant(planetarySystem.chosenPlanet.transform);
+        controller.camy.ViewVectorInstant(new Vector2(-18, -3.5f));
+        controller.camy.isMoveTweening = false;
+        scrUIController.instance.WipeFromBlack();
+        planetarySystem.planetList.ForEach(p => p.currfloor = floor);
+        PlanetTweaksFloorController.instance.showing = true;
+    }
+
     public static void Exit() {
         scrController.instance.SetValue("exitingToMainMenu", true);
         if(instance) Destroy(instance);
         instance = null;
         GCS.sceneToLoad = GCNS.sceneLevelSelect;
-        scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, delegate {
-            DOTween.KillAll();
-            SceneManager.LoadScene("scnLoading");
-        });
+        scrUIController.instance.WipeToBlack(WipeDirection.StartsFromRight, ExitAfterWipe);
+    }
+
+    private static void ExitAfterWipe() {
+        DOTween.KillAll();
+        SceneManager.LoadScene("scnLoading");
     }
 
     public static Color floorColor = new(0.78f, 0.78f, 0.886f);
